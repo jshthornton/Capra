@@ -18,6 +18,7 @@ require.config({
 
   paths: {
     'underscore': 'lib/underscore',
+    'jquery': 'lib/jquery',
     'capra': 'src'
   },
 
