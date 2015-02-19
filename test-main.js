@@ -17,6 +17,7 @@ require.config({
   baseUrl: '/base',
 
   paths: {
+    'backbone': 'lib/backbone',
     'underscore': 'lib/underscore',
     'jquery': 'lib/jquery',
     'capra': 'src'
