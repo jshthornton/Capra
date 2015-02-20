@@ -17,6 +17,7 @@ require.config({
   baseUrl: '/base',
 
   paths: {
+    'text': 'lib/text',
     'ring': 'lib/ring',
     'backbone': 'lib/backbone',
     'underscore': 'lib/underscore',
