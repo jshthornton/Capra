@@ -17,6 +17,7 @@ require.config({
   baseUrl: '/base',
 
   paths: {
+    'ring': 'lib/ring',
     'backbone': 'lib/backbone',
     'underscore': 'lib/underscore',
     'jquery': 'lib/jquery',

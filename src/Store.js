@@ -1,17 +1,14 @@
 define([
 	'underscore',
-	'backbone'
-], function(_, Backbone) {
+	'backbone',
+	'ring'
+], function(_, Backbone, ring) {
 	'use strict';
 
-	var Cls = function() {
-		this.initialize.apply(this, arguments);
-	};
-
-	_.extend(Cls.prototype, Backbone.Events, {
+	return ring.create(_.extend({}, Backbone.Events, {
 		// collections: {}
 
-		initialize: function() {
+		constructor: function() {
 			_.bindAll(this);
 
 			this.collections = {};
@@ -86,7 +83,5 @@ define([
 				});
 			}
 		}
-	});
-
-	return Cls;
+	}));
 });

@@ -1,24 +1,15 @@
 define([
 	'underscore',
-	'backbone'
-], function(_, Backbone) {
+	'backbone',
+	'ring'
+], function(_, Backbone, ring) {
 	'use strict';
-	var Cls = function(options) {
-		this.cid = _.uniqueId('batchManager');
-		options = options || (options = {});
-		this.initialize.apply(this, arguments);
-	};
 
-	// Static (class) properties
-/*	_.extend(Cls, {
-	});*/
-
-	// Instance properties
-	_.extend(Cls.prototype, Backbone.Events, {
+	return ring.create(_.extend({}, Backbone.Events, {
 		// results: [],
 		_count: null,
 
-		initialize: function(options) {
+		constructor: function() {
 			_.bindAll(this);
 
 			this._results = [];
@@ -46,7 +37,5 @@ define([
 				this.trigger('finished', this, this._results);
 			}
 		}
-	});
-
-	return Cls;
+	}));
 });
