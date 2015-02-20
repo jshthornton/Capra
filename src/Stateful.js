@@ -8,11 +8,15 @@ define([
 	return ring.create(_.extend({}, Backbone.Events, {
 		// properties
 
-		constructor: function() {
+		constructor: function(properties) {
 			_.bindAll(this);
 
 			this._previous = {};
 			this._properties = {};
+
+			if(_.isObject(properties) === true) {
+				this.set(properties);
+			}
 		},
 
 		set: function() {
