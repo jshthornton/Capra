@@ -5,7 +5,7 @@ define([
 
 	'capra/view/View'
 ], function(parser, template, $) {
-	describe('capra/view/Parser', function() {
+	describe('capra/view/parser', function() {
 		beforeAll(function() {
 			this.$template = $(template);
 		});
