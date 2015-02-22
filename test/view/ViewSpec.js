@@ -9,11 +9,7 @@ define([
 		});
 
 		it('Should auto render', function() {
-			var view = new View({
-				props: {
-					autoRender: true
-				}
-			});
+			var view = new View();
 
 			expect(view.props.get('isRendered')).toEqual(true);
 		});
@@ -26,10 +22,6 @@ define([
 					autoRender: false
 				}
 			});
-
-			expect(view.props.get('isRendered')).toEqual(false);
-
-			view = new View();
 
 			expect(view.props.get('isRendered')).toEqual(false);
 		});

@@ -19,8 +19,8 @@ define([
 			_.bindAll(this);
 			this.$super(options);
 
-			this.props = new Stateful({
-				autoRender: elementUtil.isAttached(this.el),
+			this.props = new HashMap({
+				autoRender: true,
 				autoStartup: true,
 				isRendered: false,
 				isStartedup: false,
