@@ -71,15 +71,32 @@ define([
 				unset: true
 			});
 
+			this._fireChange = false;
+
 			this._set(key, undefined, options);
 
 			this.trigger('change', this, options);
+		},
+
+		clear: function(options) {
+			options = _.extend(options || {}, {
+				unset: true
+			});
+
+			_.forOwn(this.properties, function(value, key) {
+				this._set(key, undefined, options);
+			}, this);
+
+			if(this._fireChange === true) {
+				this.trigger('change', this, options);
+			}
 		},
 
 		has: function(key) {
 			// underscore proxy
 			return _.has(this.properties, key);
 		},
+
 		_set: function(key, value, options) {
 			options = _.extend(options || {}, {
 			});
