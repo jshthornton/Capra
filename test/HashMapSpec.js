@@ -16,6 +16,7 @@ define([
 			this.hashmap.set('test', true);
 
 			expect(this.hashmap.get('test')).toEqual(true);
+			expect(this.hashmap.has('test')).toEqual(true);
 		});
 
 		it('Should set previous', function() {

@@ -76,6 +76,10 @@ define([
 			this.trigger('change', this, options);
 		},
 
+		has: function(key) {
+			// underscore proxy
+			return _.has(this.properties, key);
+		},
 		_set: function(key, value, options) {
 			options = _.extend(options || {}, {
 			});
