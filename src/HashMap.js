@@ -11,8 +11,8 @@ define([
 		constructor: function(properties) {
 			_.bindAll(this);
 
-			this._previous = {};
-			this._properties = {};
+			this.previousProperties = {};
+			this.properties = {};
 
 			if(_.isObject(properties) === true) {
 				this.set(properties);
@@ -31,6 +31,9 @@ define([
 				props[arguments[0]] = arguments[1];
 				options = arguments[2];
 			}
+
+			options = _.extend(options || {}, {
+			});
 
 			this._fireChange = false;
 
@@ -60,22 +63,39 @@ define([
 		},
 
 		previous: function(key) {
-			return this._previous[key];
+			return this.previousProperties[key];
+		},
+
+		unset: function(key, options) {
+			options = _.extend(options || {}, {
+				unset: true
+			});
+
+			this._set(key, undefined, options);
+
+			this.trigger('change', this, options);
 		},
 
 		_set: function(key, value, options) {
+			options = _.extend(options || {}, {
+			});
+
 			// Replace previous
-			this._previous[key] = this._properties[key];
+			this.previousProperties[key] = this.properties[key];
 
 			// Update property
-			this._properties[key] = value;
+			if(options.unset === true) {
+				delete this.properties[key];
+			} else {
+				this.properties[key] = value;
+			}
 
 			this.trigger('change:' + key, this, value, options);
 			this._fireChange = true;
 		},
 
 		_get: function(key) {
-			return this._properties[key];
+			return this.properties[key];
 		}
 	}));
 });

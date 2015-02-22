@@ -5,53 +5,65 @@ define([
 	describe('capra/HashMap', function() {
 		beforeEach(function() {
 			this.evt = _.extend({}, Backbone.Events);
-			this.stateful = new HashMap();
+			this.hashmap = new HashMap();
 		});
 
 		it('Should create an instance', function() {
-			expect(this.stateful instanceof HashMap).toEqual(true);
+			expect(this.hashmap instanceof HashMap).toEqual(true);
 		});
 
 		it('Should set / get', function() {
-			this.stateful.set('test', true);
+			this.hashmap.set('test', true);
 
-			expect(this.stateful.get('test')).toEqual(true);
+			expect(this.hashmap.get('test')).toEqual(true);
 		});
 
 		it('Should set previous', function() {
-			this.stateful.set('test', true);
-			this.stateful.set('test', false);
+			this.hashmap.set('test', true);
+			this.hashmap.set('test', false);
 
-			expect(this.stateful.get('test')).toEqual(false);
-			expect(this.stateful.previous('test')).toEqual(true);
+			expect(this.hashmap.get('test')).toEqual(false);
+			expect(this.hashmap.previous('test')).toEqual(true);
 		});
 
 		it('Should support hash set', function() {
-			this.stateful.set({
+			this.hashmap.set({
 				test: true
 			});
 
-			expect(this.stateful.get('test')).toEqual(true);
+			expect(this.hashmap.get('test')).toEqual(true);
 		});
 
 		it('Should set / get (custom)', function() {
-			this.stateful._testSetter = function(key, value, options) {
+			this.hashmap._testSetter = function(key, value, options) {
 				this._set(key, 'goat', options);
 			};
 
-			this.stateful._testGetter = function(key, options) {
+			this.hashmap._testGetter = function(key, options) {
 				return this._get(key, options);
 			};
 
-			this.stateful.set('test', true);
+			this.hashmap.set('test', true);
 
-			expect(this.stateful.get('test')).toEqual('goat');
+			expect(this.hashmap.get('test')).toEqual('goat');
 		});
 
 		it('Should not fire change (empty)', function() {
-			this.stateful.set({});
+			this.hashmap.set({});
 
-			expect(this.stateful._fireChange).toEqual(false);
+			expect(this.hashmap._fireChange).toEqual(false);
+		});
+
+		it('Should unset', function() {
+			this.hashmap.set({
+				test: true
+			});
+
+			expect(this.hashmap.get('test')).toEqual(true);
+
+			this.hashmap.unset('test');
+
+			expect(this.hashmap.get('test')).toEqual(undefined);
 		});
 
 		afterEach(function() {
