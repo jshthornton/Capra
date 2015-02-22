@@ -1,15 +1,15 @@
 define([
 	'backbone',
 	'underscore',
-	'../Stateful',
+	'../HashMap',
 	'ring',
 	'../util/element',
 
 	'nodeNab'
-], function(Backbone, _, Stateful, ring, elementUtil) {
+], function(Backbone, _, HashMap, ring, elementUtil) {
 	var View = ring.create([Backbone.View], {
 		_cidPrefix: 'view',
-		props: null, // Stateful
+		props: null, // HashMap
 		template: null,
 
 		// Init

@@ -1,15 +1,15 @@
 define([
-	'capra/Stateful',
+	'capra/HashMap',
 	'backbone'
-], function(Stateful, Backbone) {
-	describe('capra/Stateful', function() {
+], function(HashMap, Backbone) {
+	describe('capra/HashMap', function() {
 		beforeEach(function() {
 			this.evt = _.extend({}, Backbone.Events);
-			this.stateful = new Stateful();
+			this.stateful = new HashMap();
 		});
 
 		it('Should create an instance', function() {
-			expect(this.stateful instanceof Stateful).toEqual(true);
+			expect(this.stateful instanceof HashMap).toEqual(true);
 		});
 
 		it('Should set / get', function() {
