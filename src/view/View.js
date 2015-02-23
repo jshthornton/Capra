@@ -24,7 +24,6 @@ define([
 				autoStartup: true,
 				isRendered: false,
 				isStartedup: false,
-				isDisposed: false,
 				isRemoved: false
 			});
 			this.props.obj = this;
@@ -135,14 +134,11 @@ define([
 		},
 
 		// Teardown
-		remove: function() {
-			this.$super();
+		remove: function(options) {
+			this.$super(options);
 
 			this.props.set('isRemoved', true);
-		},
-
-		stopListening: function() {
-
+			this.trigger('remove', this);
 		}
 
 		// DOM Events
