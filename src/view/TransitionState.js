@@ -1,7 +1,6 @@
 define({
-	INITIAL: 0,
-	PROGRESSIN: 1,
-	IN: 2,
-	PROGRESSOUT: 3,
-	OUT: 4
+	PROGRESS_IN: 0,
+	IN: 1,
+	PROGRESS_OUT: 2,
+	OUT: 3
 });

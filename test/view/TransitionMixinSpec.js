@@ -12,7 +12,7 @@ define([
 		it('Should be using enum', function() {
 			var view = new this.FauxView();
 
-			expect(view.props.get('transition')).toEqual(TransitionState.INITIAL);
+			expect(view.props.get('transition')).toEqual(null);
 		});
 	});
 });
