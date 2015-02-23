@@ -1,7 +1,11 @@
 define([
-	'capra/view/View'
-], function(View) {
+	'capra/view/View',
+	'backbone'
+], function(View, Backbone) {
 	describe('capra/view/View', function() {
+		beforeEach(function() {
+			this.evt = _.extend({}, Backbone.Events);
+		});
 		it('Should create an instance', function() {
 			var view = new View();
 
@@ -60,6 +64,22 @@ define([
 			view.remove();
 
 			expect(view.props.get('isRemoved')).toEqual(true);
+		});
+
+		it('Should be removed (event)', function() {
+			var view = new View();
+
+			var fired = false;
+			this.evt.listenTo(view.props, 'change:isRemoved', function() {
+				fired = true;
+			});
+			view.remove();
+
+			expect(fired).toEqual(true);
+		});
+
+		afterEach(function() {
+			this.evt.stopListening();
 		});
 	});
 });
