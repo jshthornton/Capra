@@ -9,10 +9,15 @@ define([
 			this.FauxView = ring.create([TransitionMixin, View], {});
 		});
 
-		it('Should be using enum', function() {
-			var view = new this.FauxView();
+		it('Should auto transition', function() {
+			var $el = $('<div/>');
+			$(document.body).append($el);
 
-			expect(view.props.get('transition')).toEqual(null);
+			var view = new this.FauxView({
+				el: $el[0]
+			});
+
+			expect(view.props.get('transition')).toEqual(TransitionState.IN);
 		});
 	});
 });
