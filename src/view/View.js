@@ -138,7 +138,6 @@ define([
 			this.$super(options);
 
 			this.props.set('isRemoved', true);
-			this.trigger('remove', this);
 		}
 
 		// DOM Events

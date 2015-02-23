@@ -31,6 +31,7 @@ define([
 			}
 
 			this.listenTo(childView, 'remove', this.onChildRemove);
+			this.listenTo(childView.props, 'change:isRemoved', this.onChildIsRemovedChange);
 
 			this.children.set(name, childView);
 			return childView;
@@ -90,7 +91,8 @@ define([
 			});*/
 		},
 
-		onChildRemove: function(view) {
+		onChildIsRemovedChange: function(childProps, options) {
+			var view = childProps.obj;
 			var key = _.findKey(this.children.properties, function(childView) {
 				return view === childView;
 			});
