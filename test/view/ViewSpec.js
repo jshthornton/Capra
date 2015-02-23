@@ -1,7 +1,9 @@
 define([
 	'capra/view/View',
-	'backbone'
-], function(View, Backbone) {
+	'backbone',
+	'ring',
+	'underscore'
+], function(View, Backbone, ring, _) {
 	describe('capra/view/View', function() {
 		beforeEach(function() {
 			this.evt = _.extend({}, Backbone.Events);
@@ -76,6 +78,30 @@ define([
 			view.remove();
 
 			expect(fired).toEqual(true);
+		});
+
+		it('Should render fn template', function() {
+			var fauxId = _.uniqueId('el_');
+
+			var FauxView = ring.create([View], {
+				template: _.template('<div class="' + fauxId + '"></div>')
+			});
+
+			var view = new FauxView();
+
+			expect(view.$el.find('.' + fauxId).length).toEqual(1);
+		});
+
+		it('Should render string template', function() {
+			var fauxId = _.uniqueId('el_');
+
+			var FauxView = ring.create([View], {
+				template: '<div class="' + fauxId + '"></div>'
+			});
+
+			var view = new FauxView();
+
+			expect(view.$el.find('.' + fauxId).length).toEqual(1);
 		});
 
 		afterEach(function() {
