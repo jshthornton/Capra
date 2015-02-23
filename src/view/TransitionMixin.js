@@ -1,7 +1,8 @@
 define([
 	'ring',
-	'./TransitionState'
-], function(ring, TransitionState) {
+	'./TransitionState',
+	'../util/element'
+], function(ring, TransitionState, elementUtil) {
 	return ring.create({
 		_initialState: function(options) {
 			this.$super(options);
@@ -15,7 +16,9 @@ define([
 		_afterRender: function() {
 			this.$super();
 
-
+			if(this.props.get('autoTransition') === true && elementUtil.isAttached(this.el) === true) {
+				this.transitionInitial();
+			}
 		},
 
 		transitionInitial: function() {
@@ -27,7 +30,7 @@ define([
 		},
 
 		transitionOut: function() {
-			
+
 		}
 	});
 });
