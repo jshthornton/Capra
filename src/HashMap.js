@@ -7,12 +7,17 @@ define([
 
 	return ring.create(_.extend({}, Backbone.Events, {
 		// properties
+		// previousProperties
+		// changedProperties
+		_hasChanged: false,
+		_isChanging: false,
 
 		constructor: function(properties) {
 			_.bindAll(this);
 
 			this.previousProperties = {};
 			this.properties = {};
+			this.changedProperties = {};
 
 			if(_.isObject(properties) === true) {
 				this.set(properties);
@@ -35,7 +40,8 @@ define([
 			options = _.extend(options || {}, {
 			});
 
-			this._fireChange = false;
+			this._hasChanged = false;
+			this._isChanging = true;
 
 			_.forOwn(props, function(value, key) {
 				var fnString = '_' + key + 'Setter';
@@ -47,9 +53,11 @@ define([
 				}
 			}, this);
 
-			if(this._fireChange === true) {
+			if(this._hasChanged === true) {
 				this.trigger('change', this, options);
 			}
+
+			this._isChanging = false;
 		},
 
 		get: function(key, options) {
@@ -71,11 +79,16 @@ define([
 				unset: true
 			});
 
-			this._fireChange = false;
+			this._hasChanged = false;
+			this._isChanging = true;
 
 			this._set(key, undefined, options);
 
-			this.trigger('change', this, options);
+			if(this._hasChanged === true) {
+				this.trigger('change', this, options);
+			}
+
+			this._isChanging = false;
 		},
 
 		clear: function(options) {
@@ -83,18 +96,36 @@ define([
 				unset: true
 			});
 
+			this._hasChanged = false;
+			this._isChanging = true;
+
 			_.forOwn(this.properties, function(value, key) {
 				this._set(key, undefined, options);
 			}, this);
 
-			if(this._fireChange === true) {
+			if(this._hasChanged === true) {
 				this.trigger('change', this, options);
 			}
+
+			this._isChanging = false;
 		},
 
 		has: function(key) {
 			// underscore proxy
 			return _.has(this.properties, key);
+		},
+
+		changed: function() {
+			return this.changedProperties;
+		},
+
+		hasChanged: function(key) {
+			if(arguments.length === 0) {
+				// Just checking to see if the data has changed at all
+				return this._hasChanged;
+			}
+
+			return _.has(this.changedProperties, key);
 		},
 
 		_set: function(key, value, options) {
@@ -109,10 +140,11 @@ define([
 				delete this.properties[key];
 			} else {
 				this.properties[key] = value;
+				this.changedProperties[key] = value;
 			}
 
+			this._hasChanged = true;
 			this.trigger('change:' + key, this, value, options);
-			this._fireChange = true;
 		},
 
 		_get: function(key) {

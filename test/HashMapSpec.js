@@ -52,7 +52,7 @@ define([
 		it('Should not fire change (empty)', function() {
 			this.hashmap.set({});
 
-			expect(this.hashmap._fireChange).toEqual(false);
+			expect(this.hashmap.hasChanged()).toEqual(false);
 		});
 
 		it('Should unset', function() {
