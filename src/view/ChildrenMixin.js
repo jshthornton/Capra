@@ -41,22 +41,6 @@ define([
 		},
 
 		// Start Disposal
-		stopListening: function(options) {
-			var args = arguments;
-
-			options = _.extend(options || {}, {
-				recursive: true
-			});
-
-			if(options.recursive === true) {
-				_.forOwn(this.children.properties, function(view) {
-					view.stopListening(options);
-				});
-			}
-
-			this.$super.apply(this, args);
-		},
-
 		remove: function(options) {
 			var args = arguments;
 
