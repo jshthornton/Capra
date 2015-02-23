@@ -7,9 +7,13 @@ define([
 
 		initialize: function(options) {
 			this.children = new HashMap();
+			this.children.obj = this;
 
 			this.$super(options);
+		},
 
+		_bindEvents: function(options) {
+			this.$super(options);
 			this.listenTo(this.children, 'change', this.onChildChange);
 		},
 
