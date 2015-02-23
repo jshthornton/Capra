@@ -146,8 +146,8 @@ define([
 		// Teardown
 		remove: function(options) {
 			this.$super(options);
-
 			this.props.set('isRemoved', true);
+			return this;
 		}
 
 		// DOM Events
