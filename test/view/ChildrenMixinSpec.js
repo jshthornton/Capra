@@ -34,7 +34,7 @@ define([
 			}).toThrow();
 		});
 
-		it('Should unset child', function() {
+		it('Should unset child (and remove)', function() {
 			var parent = new this.FauxView(),
 				child = new View();
 
@@ -42,17 +42,22 @@ define([
 
 			expect(parent.children.get('test')).toEqual(child);
 
-			parent.removeChild('test');
+			parent.children.unset('test');
 
 			expect(parent.children.get('test')).toEqual(undefined);
+			expect(child.props.get('isRemoved')).toEqual(true);
 		});
 
-		it('Should not remove non child', function() {
-			var parent = new this.FauxView();
+		it('Should unset a removed child', function() {
+			var parent = new this.FauxView(),
+				child = new View();
 
-			expect(function() {
-				parent.removeChild('test');
-			}).toThrow();
+			parent.addChild('test', child);
+			expect(parent.children.get('test')).toEqual(child);
+
+			child.remove();
+			expect(parent.children.get('test')).toEqual(undefined);
+			expect(child.props.get('isRemoved')).toEqual(true);
 		});
 	});
 });
