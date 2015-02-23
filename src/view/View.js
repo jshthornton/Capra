@@ -7,7 +7,7 @@ define([
 
 	'nodeNab'
 ], function(Backbone, _, HashMap, ring, elementUtil) {
-	var View = ring.create([Backbone.View], {
+	return ring.create([Backbone.View], {
 		_cidPrefix: 'view',
 		props: null, // HashMap
 		template: null,
@@ -19,21 +19,32 @@ define([
 			_.bindAll(this);
 			this.$super(options);
 
-			this.props = new HashMap({
+			this.props = new HashMap();
+			this.props.obj = this;
+
+			this._initialState(options);
+			this._bindEvents(options);
+
+			this._beforeMixin(options);
+			this._mixinOptions(options);
+
+			if(this.props.get('autoRender') === true) {
+				this.render();
+			}
+		},
+
+		_initialState: function(options) {
+			this.props.set({
 				autoRender: true,
 				autoStartup: true,
 				isRendered: false,
 				isStartedup: false,
 				isRemoved: false
 			});
-			this.props.obj = this;
+		},
 
-			this._beforeMixin();
-			this._mixinOptions(options);
+		_bindEvents: function() {
 
-			if(this.props.get('autoRender') === true) {
-				this.render();
-			}
 		},
 
 		_beforeMixin: function() {
@@ -142,13 +153,4 @@ define([
 
 		// DOM Events
 	});
-
-	View.TRANSITION = {
-		PROGRESS_IN: 0,
-		IN: 1,
-		PROGRESS_OUT: 2,
-		OUT: 3
-	}
-
-	return View;
 });
