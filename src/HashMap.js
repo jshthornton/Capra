@@ -132,6 +132,11 @@ define([
 			options = _.extend(options || {}, {
 			});
 
+			var currentValue = this._get(key);
+			if(currentValue === value) {
+				return;
+			}
+
 			// Replace previous
 			this.previousProperties[key] = this.properties[key];
 
