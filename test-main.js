@@ -22,6 +22,7 @@ require.config({
     'backbone': 'lib/backbone',
     'underscore': 'lib/underscore',
     'jquery': 'lib/jquery',
+    'nodeNab': 'lib/node-nab',
     'capra': 'src'
   },
 
