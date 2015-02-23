@@ -59,5 +59,18 @@ define([
 			expect(parent.children.get('test')).toEqual(undefined);
 			expect(child.props.get('isRemoved')).toEqual(true);
 		});
+
+		it('Should remove child upon removing parent', function() {
+			var parent = new this.FauxView(),
+				child = new View();
+
+			parent.addChild('test', child);
+			expect(parent.children.get('test')).toEqual(child);
+
+			parent.remove();
+			expect(parent.children.get('test')).toEqual(undefined);
+			expect(parent.props.get('isRemoved')).toEqual(true);
+			expect(child.props.get('isRemoved')).toEqual(true);
+		});
 	});
 });
