@@ -19,5 +19,19 @@ define([
 
 			expect(view.props.get('transition')).toEqual(TransitionState.IN);
 		});
+
+		it('Should transition in', function() {
+			var view = new this.FauxView();
+			view.transitionIn();
+
+			expect(view.props.get('transition')).toEqual(TransitionState.IN);
+		});
+
+		it('Should transition out', function() {
+			var view = new this.FauxView();
+			view.transitionOut();
+
+			expect(view.props.get('transition')).toEqual(TransitionState.OUT);
+		});
 	});
 });
