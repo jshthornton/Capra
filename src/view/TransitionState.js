@@ -1,0 +1,7 @@
+define({
+	INITIAL: 0,
+	PROGRESSIN: 1,
+	IN: 2,
+	PROGRESSOUT: 3,
+	OUT: 4
+});
