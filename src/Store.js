@@ -15,16 +15,16 @@ define([
 		},
 
 		register: function(key, obj) {
-			if(obj instanceof Backbone.Collection) {
-				obj.store = this;
-				this.collections[key] = obj;
-
-				this.listenTo(obj, 'change:id', function(model) {
-					this._propogateIdChange(model);
-				});
-
-				return;
+			if(obj instanceof Backbone.Collection === false) {
+				throw new Error('Attempted to register non-collection instance');
 			}
+
+			obj.store = this;
+			this.collections[key] = obj;
+
+			this.listenTo(obj, 'change:id', function(model) {
+				this._propogateIdChange(model);
+			});
 		},
 
 		_propogateIdChange: function(model) {

@@ -22,9 +22,10 @@ define([
 
 		it('Should not register a non-collection', function() {
 			var obj = {};
-			this.store.register('collection', obj);
-
-			expect(_.size(this.store.collections)).toEqual(0);
+		
+			expect(function() {
+				this.store.register('collection', obj);
+			}).toThrow();
 		});
 
 		describe('Get related', function() {
