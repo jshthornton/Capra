@@ -93,14 +93,67 @@ define([
 		});
 
 		describe('Expiry', function() {
-			it('Should rename', function() {
+			beforeEach(function() {
+				jasmine.clock().install();
+			});
+
+			afterEach(function() {
+				jasmine.clock().uninstall();
+			});
+
+			it('Should get ttl', function() {
 				cache.set('foo', true, {
 					expiry: 60
 				});
 
 				var ttl = cache.ttl('foo');
 				expect(ttl).toBeDefined();
+				expect(ttl).toBeGreaterThan(0);
 				expect(ttl).toBeLessThan(61);
+			});
+
+			it('Should decrease ttl', function() {
+				jasmine.clock().mockDate();
+				
+				cache.set('foo', true, {
+					expiry: 60
+				});
+
+				jasmine.clock().tick(30 * 1000);
+
+				var ttl = cache.ttl('foo');
+				expect(ttl).toBeDefined();
+				expect(ttl).toBeGreaterThan(0);
+				expect(ttl).toBeLessThan(31);
+			});
+
+			it('Should expire', function() {
+				jasmine.clock().mockDate();
+				
+				cache.set('foo', true, {
+					expiry: 60
+				});
+
+				jasmine.clock().tick(70 * 1000);
+
+				var ttl = cache.ttl('foo');
+				expect(ttl).toEqual(0);
+			});
+
+			it('Should not be able to get expired item', function() {
+				jasmine.clock().mockDate();
+				
+				cache.set('foo', true, {
+					expiry: 60
+				});
+
+				jasmine.clock().tick(70 * 1000);
+
+				var ttl = cache.ttl('foo');
+				expect(ttl).toEqual(0);
+				expect(function() {
+					cache.get('foo')
+				}).toThrow();
 			});
 		});
 	});
