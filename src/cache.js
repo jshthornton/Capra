@@ -13,21 +13,11 @@ define([
 			return this._parse(this._get(key));
 		},
 
-		_getMeta: function(key) {
-			var container = this._getContainer(key);
-			if(container == null) {
-				return false;
-			}
-
+		_getMeta: function(container) {
 			return container[0];
 		},
 
-		_getValue: function(key) {
-			var container = this._getContainer(key);
-			if(container == null) {
-				throw new Error('Item ' + key + ' not in cache');
-			}
-
+		_getValue: function(container) {
 			return container[1];
 		},
 
