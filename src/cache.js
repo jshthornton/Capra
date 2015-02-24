@@ -44,7 +44,17 @@ define([
 		},
 
 		get: function(key) {
-			return this._getValue(key);
+			var container = this._getContainer(key);
+
+			if(container == null) {
+				throw new Error('Unable to find item ' + key + ' in cache');
+			}
+
+			if(this._hasExpired(container)) {
+				throw new Error('Item has expired');
+			}
+
+			return this._getValue(container);
 		},
 
 		set: function(key, value, meta) {
