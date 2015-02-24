@@ -175,10 +175,7 @@ define([
 			}
 
 			var ttl = this.ttl(key);
-			if(ttl === 0) {
-				//this.del(key);
-				return false;
-			} if(ttl === false) {
+			if(ttl === 0 || ttl === false) {
 				return false;
 			} else {
 				return true;
