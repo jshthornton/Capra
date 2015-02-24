@@ -72,6 +72,30 @@ define([
 			this._set(key, formatted);
 		},
 
+		_hasExpired: function(container) {
+			if(this._hasExpiry(container) === false) {
+				return false;
+			}
+
+			var now = new Date(),
+				expiry = new Date(this._getMeta(container).expiry);
+
+			return now >= expiry;
+		},
+
+		_hasExpiry: function(container) {
+			var expiry = this._getMeta(container).expiry;
+			if(expiry === false) {
+				// Fast checking
+				return false;
+			} else if(_.isNaN(Date.parse(expiry))) {
+				// Strong checking
+				throw new Error('Malformed expiry. Expected parsable date, actually ' + expiry);
+			}
+
+			return true;
+		},
+
 		expire: function(/*key,*/ /*seconds*/) {
 
 		},
