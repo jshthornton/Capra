@@ -34,7 +34,6 @@ define([
 
 		initialize: function() {
 			_.bindAll(this);
-			this._super.apply(this, arguments);
 		},
 
 	});
