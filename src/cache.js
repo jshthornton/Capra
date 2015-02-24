@@ -111,20 +111,18 @@ define([
 				return false;
 			}
 
-			var expiry = container[0].expiry,
-				now;
-
-			if(expiry === false) {
+			if(this._hasExpiry(container) === false) {
 				return true;
 			}
 
-			now = new Date();
-			expiry = new Date(expiry);
-			if(now >= expiry) {
+			if(this._hasExpired(container)) {
 				return 0;
 			}
 
-			return Math.ceil((now - expiry) / 1000);
+			var now = new Date(),
+				expiry = new Date(this._getMeta(container).expiry);
+
+			return Math.ceil((expiry - now) / 1000);
 		},
 
 		rename: function(oldKey, newKey) {
@@ -168,7 +166,7 @@ define([
 
 			var ttl = this.ttl(key);
 			if(ttl === 0) {
-				this.del(key);
+				//this.del(key);
 				return false;
 			} if(ttl === false) {
 				return false;
