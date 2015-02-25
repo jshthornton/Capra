@@ -4,6 +4,8 @@ define([
 	'use strict';
 	var cache = {
 		_prefix: 'cache_',
+		_ecRate: 3000,
+		ecTicker: null,
 
 		_parse: function(data) {
 			return JSON.parse(data);
@@ -203,14 +205,10 @@ define([
 			}
 		},
 
-		_tick: function() {
-			
-		},
-
 		initialize: function() {
 			_.bindAll(this);
 
-			//setInterval(this._tick, 30000);
+			this.ecTicker = setInterval(this.flushExpired, this._ecRate);
 		}
 	};
 
