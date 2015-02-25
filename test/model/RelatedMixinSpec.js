@@ -59,12 +59,27 @@ define([
 				jasmine.Ajax.uninstall();
 			});
 
-			it('Should return a promise', function() {
+			it('Should return a promise (leaf)', function() {
 				/*jasmine.Ajax.stubRequest('/another/url').andReturn({
 					"responseText": 'immediate response'
 				});*/
 
 				var promise = user.fetchTree();
+
+				expect(promise).toBeTruthy();
+				expect(promise.state).toBeTruthy();
+			});
+
+			it('Should return a promise (branch)', function() {
+				/*jasmine.Ajax.stubRequest('/another/url').andReturn({
+					"responseText": 'immediate response'
+				});*/
+
+				var promise = user.fetchTree({
+					contains: {
+						profile: true
+					}
+				});
 
 				expect(promise).toBeTruthy();
 				expect(promise.state).toBeTruthy();

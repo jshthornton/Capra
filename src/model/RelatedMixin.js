@@ -1,22 +1,29 @@
 define([
 	'ring',
-	'underscore',
-	'../lang'
-], function(ring, Backbone, _, lang) {
+	'underscore'
+], function(ring, _) {
 	return ring.create({
 
 		fetchTree: function(options) {
 			var store = this.collection.store;
 
-			var def = new $.Deferred();
+			if(_.has(options, 'contains') && _.isObject(options.contains)) {
+				// A Leaf
+				return this.fetch(options);
+			} else {
+				// A branch and a leaf
+				return this.fetch(options).then(function() {
+					_.forOwn(options.contains, function(relatedOptions, key) {
+						var relatedModel = store.getRelated(this, key);
 
-			this.fetch(options).then(function() {
-				_.forOwn(options.contains, function() {
+						if(relatedOptions === true) {
+							relatedOptions = undefined;
+						}
 
-				}, this);
-			});
-
-			return def.promise();
+						return relatedModel.fetchTree(relatedOptions);
+					}, this);
+				});
+			}
 		}
 	});
 });
