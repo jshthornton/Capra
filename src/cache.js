@@ -67,7 +67,15 @@ define([
 
 			var formatted = JSON.stringify(data);
 
-			this._set(key, formatted);
+			try {
+				// This might throw due to quota exceeding.
+				this._set(key, formatted);
+			} catch(err) {
+				// So let's try and clear the expired and try again
+				this.flushExpired();
+				// This one can happily throw, as then it is a genuine problem
+				this._set(key, formatted);
+			}
 		},
 
 		_hasExpired: function(container) {
