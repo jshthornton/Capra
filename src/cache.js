@@ -10,7 +10,13 @@ define([
 		},
 
 		_getContainer: function(key) {
-			return this._parse(this._get(key));
+			var item = this._get(key);
+
+			if(item == null) {
+				throw new Error('Unable to find item ' + key + ' in cache');
+			}
+
+			return this._parse(item);
 		},
 
 		_getMeta: function(container) {
@@ -31,10 +37,6 @@ define([
 
 		get: function(key) {
 			var container = this._getContainer(key);
-
-			if(container == null) {
-				throw new Error('Unable to find item ' + key + ' in cache');
-			}
 
 			if(this._hasExpired(container)) {
 				throw new Error('Item has expired');
