@@ -15,19 +15,14 @@ define([
 			Object.defineProperty(this, 'length', {
 				get: function() {
 					var count = 0;
-					for(var i = 0; i < localStorage.length; i++){
-						if(_.startsWith(localStorage.key(i), this._prefix)) {
-							var rawKey = localStorage.key(i),
-								fauxKey = rawKey.slice(this._prefix.length);
-
-							try {
-								var container = this._getContainer(fauxKey);
-								if(this._hasExpired(container) === false) {
-									count++;
-								}
-							} catch(err) {}
-						}
-					}
+					_.forOwn(this._hash, function(item, key) {
+						try {
+							var container = this._getContainer(key);
+							if(this._hasExpired(container) === false) {
+								count++;
+							}
+						} catch(err) {}
+					}, this);
 
 					return count;
 				}
