@@ -21,20 +21,6 @@ define([
 			return container[1];
 		},
 
-		_resolver: function(entity) {
-			var container;
-
-			if(_.isString(entity)) {
-				container = this._getContainer(entity);
-			} else if(_.isObject(entity)) {
-				container = entity[0];
-			} else {
-				throw new Error('Unable to resolve unknown entity type');
-			}
-
-			return container;
-		},
-
 		_get: function(key) {
 			return localStorage.getItem(this._prefix + key);
 		},
