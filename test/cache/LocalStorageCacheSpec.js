@@ -1,7 +1,7 @@
 define([
 	'capra/cache/LocalStorageCache'
 ], function(Cache) {
-	describe('capra/cache', function() {
+	describe('capra/cache/LocalStorageCache', function() {
 		beforeEach(function() {
 			localStorage.clear();
 			this.cache = new Cache();
@@ -23,7 +23,7 @@ define([
 			}).toThrow();
 		});
 
-		it('Should get container (throw not found)', function() {
+		it('Should get container', function() {
 			this.cache.set('foo', 'bar');
 
 			expect(this.cache._getContainer('foo')).toBeTruthy();
