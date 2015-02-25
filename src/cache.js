@@ -141,20 +141,45 @@ define([
 			this._set(newKey, tmp);
 		},
 
-		flush: function() {
+		_flush: function(cb) {
 			var arr = [],  // Array to hold the keys
 				i;
 			// Iterate over localStorage and insert the keys that meet the condition into arr
 			for(i = 0; i < localStorage.length; i++){
 				if(_.startsWith(localStorage.key(i), this._prefix)) {
-					arr.push(localStorage.key(i));
+					var rawKey = localStorage.key(i),
+						fauxKey = rawKey.slice(this._prefix.length),
+						result;
+
+					if(_.isFunction(cb)) {
+						result = cb.call(this, fauxKey);
+					} else {
+						result = cb;
+					}
+
+					if(result === true) {
+						arr.push(fauxKey);
+					}
 				}
 			}
 
 			// Iterate over arr and remove the items by key
 			for(i = 0; i < arr.length; i++) {
-				localStorage.removeItem(arr[i]);
+				this.del(arr[i]);
 			}
+		},
+
+		flush: function() {
+			this._flush(true);
+		},
+
+		flushExpired: function() {
+			this._flush(function(key) {
+				try {
+					var container = this._getContainer(key);
+					return this._hasExpired(container);
+				} catch(err) {}
+			});
 		},
 
 		del: function(key) {
