@@ -14,6 +14,24 @@ define([
 			localStorage.clear();
 		});
 
+		it('Should get container (throw bad input)', function() {
+			expect(function() {
+				cache._getContainer();
+			}).toThrow();
+		});
+
+		it('Should get container (throw not found)', function() {
+			expect(function() {
+				cache._getContainer('123');
+			}).toThrow();
+		});
+
+		it('Should get container (throw not found)', function() {
+			cache.set('foo', 'bar');
+
+			expect(cache._getContainer('foo')).toBeTruthy();
+		});
+
 
 		it('Should be able to set item', function() {
 			cache.set('test', true);
@@ -58,6 +76,28 @@ define([
 				expect(cache.length).toEqual(0);
 				cache.set('foo', true);
 				expect(cache.length).toEqual(1);
+			});
+
+			it('Should not included expired items', function() {
+				jasmine.clock().install();
+				jasmine.clock().mockDate();
+
+				expect(cache.length).toEqual(0);
+				
+				cache.set('foo', true, {
+					expiry: 2
+				});
+
+				expect(cache.length).toEqual(1);
+
+				jasmine.clock().tick(3 * 1000);
+
+				var ttl = cache.ttl('foo');
+				expect(ttl).toEqual(0);
+
+				expect(cache.length).toEqual(0);
+
+				jasmine.clock().uninstall();
 			});
 		});
 
@@ -152,8 +192,28 @@ define([
 				var ttl = cache.ttl('foo');
 				expect(ttl).toEqual(0);
 				expect(function() {
-					cache.get('foo')
+					cache.get('foo');
 				}).toThrow();
+			});
+
+			it('Should flush expired items', function() {
+				jasmine.clock().mockDate();
+				
+				cache.set('foo', true, {
+					expiry: 5
+				});
+
+				jasmine.clock().tick(6 * 1000);
+
+				var ttl = cache.ttl('foo');
+				expect(ttl).toEqual(0);
+
+				cache.flushExpired();
+
+				expect(function() {
+					cache.ttl('foo');
+				}).toThrow();
+
 			});
 		});
 	});
