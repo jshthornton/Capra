@@ -195,9 +195,8 @@ define([
 				return false;
 			}
 
-			var ttl = this.ttl(key);
-			if(ttl === 0 || ttl === false) {
 			var ttl = this._ttl(container);
+			if(ttl === 0) {
 				return false;
 			} else {
 				return true;
