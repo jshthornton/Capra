@@ -1,12 +1,52 @@
 define([
+	'ring',
+	'./AbstractCache',
 	'underscore'
-], function(_) {
-	'use strict';
-	var cache = {
-		_prefix: 'cache_',
+], function(ring, AbstractCache, _) {
+	return ring.create([AbstractCache], {
+		_prefix: null,
 		ecTicker: null,
 		_ecRate: 3000,
-		_init: false,
+
+		constructor: function() {
+			_.bindAll(this);
+
+			this._prefix = _.uniqueId('cache_') + '_';
+
+			Object.defineProperty(this, 'length', {
+				get: function() {
+					var count = 0;
+					for(var i = 0; i < localStorage.length; i++){
+						if(_.startsWith(localStorage.key(i), this._prefix)) {
+							var rawKey = localStorage.key(i),
+								fauxKey = rawKey.slice(this._prefix.length);
+
+							try {
+								var container = this._getContainer(fauxKey);
+								if(this._hasExpired(container) === false) {
+									count++;
+								}
+							} catch(err) {}
+						}
+					}
+
+					return count;
+				}
+			});
+
+			Object.defineProperty(this, 'ecRate', {
+				get: function() {
+					return this._ecRate;
+				},
+				set: function(value) {
+					clearInterval(this.ecTicker);
+					this._ecRate = value;
+					this._setupTicker();
+				}
+			});
+
+			this._setupTicker();
+		},
 
 		_parse: function(data) {
 			return JSON.parse(data);
@@ -22,30 +62,12 @@ define([
 			return this._parse(item);
 		},
 
-		_getMeta: function(container) {
-			return container[0];
-		},
-
-		_getValue: function(container) {
-			return container[1];
-		},
-
 		_get: function(key) {
 			return localStorage.getItem(this._prefix + key);
 		},
 
 		_set: function(key, value) {
 			localStorage.setItem(this._prefix + key, value);
-		},
-
-		get: function(key) {
-			var container = this._getContainer(key);
-
-			if(this._hasExpired(container)) {
-				throw new Error('Item has expired');
-			}
-
-			return this._getValue(container);
 		},
 
 		set: function(key, value, meta) {
@@ -168,91 +190,8 @@ define([
 			}
 		},
 
-		flush: function() {
-			this._flush(true);
-		},
-
-		flushExpired: function() {
-			this._flush(function(key) {
-				try {
-					var container = this._getContainer(key);
-					return this._hasExpired(container);
-				} catch(err) {}
-			});
-		},
-
 		del: function(key) {
 			localStorage.removeItem(this._prefix + key);
-		},
-
-		exists: function(key) {
-			// Do fast check first
-			var item = this._get(key);
-			if(item === null) {
-				return false;
-			}
-
-			// Then if it does exist, check it isn't expired
-			var container = this._parse(item);
-			if(container == null) {
-				return false;
-			}
-
-			var ttl = this._ttl(container);
-			if(ttl === 0) {
-				return false;
-			} else {
-				return true;
-			}
-		},
-
-		_setupTicker: function() {
-			this.ecTicker = setInterval(this.flushExpired, this.ecRate);
-		},
-
-		initialize: function() {
-			_.bindAll(this);
-
-			this._setupTicker();
-
-			this._init = true;
-		}
-	};
-
-
-	Object.defineProperty(cache, 'length', {
-		get: function() {
-			var count = 0;
-			for(var i = 0; i < localStorage.length; i++){
-				if(_.startsWith(localStorage.key(i), this._prefix)) {
-					var rawKey = localStorage.key(i),
-						fauxKey = rawKey.slice(this._prefix.length);
-
-					try {
-						var container = this._getContainer(fauxKey);
-						if(this._hasExpired(container) === false) {
-							count++;
-						}
-					} catch(err) {}
-				}
-			}
-
-			return count;
 		}
 	});
-
-	Object.defineProperty(cache, 'ecRate', {
-		get: function() {
-			return this._ecRate;
-		},
-		set: function(value) {
-			clearInterval(this.ecTicker);
-			this._ecRate = value;
-			if(this._init === true) {
-				this._setupTicker();
-			}
-		}
-	});
-
-	return cache;
 });
