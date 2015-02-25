@@ -55,7 +55,7 @@ define([
 		},
 
 		_set: function(key, value) {
-			localStorage.setItem(this._prefix + key, value);
+			this._hash[key] = value;
 		},
 
 		set: function(key, value, meta) {
@@ -78,67 +78,24 @@ define([
 				value
 			];
 
-			var formatted = JSON.stringify(data);
-
-			try {
-				// This might throw due to quota exceeding.
-				this._set(key, formatted);
-			} catch(err) {
-				// So let's try and clear the expired and try again
-				this.flushExpired();
-				// This one can happily throw, as then it is a genuine problem
-				this._set(key, formatted);
-			}
-		},
-
-		_ttl: function(container) {
-			if(this._hasExpiry(container) === false) {
-				return false;
-			}
-
-			if(this._hasExpired(container)) {
-				return 0;
-			}
-
-			var now = new Date(),
-				expiry = new Date(this._getMeta(container).expiry);
-
-			return Math.ceil((expiry - now) / 1000);
-		},
-
-		ttl: function(key) {
-			var container = this._getContainer(key);
-
-			return this._ttl(container);
-		},
-
-		rename: function(oldKey, newKey) {
-			var tmp = this._get(oldKey);
-			this.del(oldKey);
-			this._set(newKey, tmp);
+			this._set(key, data);
 		},
 
 		_flush: function(cb) {
 			var arr = [],  // Array to hold the keys
 				i;
-			// Iterate over localStorage and insert the keys that meet the condition into arr
-			for(i = 0; i < localStorage.length; i++){
-				if(_.startsWith(localStorage.key(i), this._prefix)) {
-					var rawKey = localStorage.key(i),
-						fauxKey = rawKey.slice(this._prefix.length),
-						result;
 
-					if(_.isFunction(cb)) {
-						result = cb.call(this, fauxKey);
-					} else {
-						result = cb;
-					}
-
-					if(result === true) {
-						arr.push(fauxKey);
-					}
+			_.forOwn(this._hash, function(item, key) {
+				if(_.isFunction(cb)) {
+					result = cb.call(this, key);
+				} else {
+					result = cb;
 				}
-			}
+
+				if(result === true) {
+					arr.push(key);
+				}
+			}, this);
 
 			// Iterate over arr and remove the items by key
 			for(i = 0; i < arr.length; i++) {
@@ -146,32 +103,19 @@ define([
 			}
 		},
 
-		flush: function() {
-			this._flush(true);
-		},
-
-		flushExpired: function() {
-			this._flush(function(key) {
-				try {
-					var container = this._getContainer(key);
-					return this._hasExpired(container);
-				} catch(err) {}
-			});
-		},
-
 		del: function(key) {
-			localStorage.removeItem(this._prefix + key);
+			delete this._hash[key];
 		},
 
 		exists: function(key) {
 			// Do fast check first
 			var item = this._get(key);
-			if(item === null) {
+			if(item === undefined) {
 				return false;
 			}
 
 			// Then if it does exist, check it isn't expired
-			var container = this._parse(item);
+			var container = item;
 			if(container == null) {
 				return false;
 			}
