@@ -114,15 +114,9 @@ define([
 
 		},
 
-		ttl: function(key) {
-			var container = this._resolver(key);
-
-			if(container === null) {
-				return false;
-			}
-
+		_ttl: function(container) {
 			if(this._hasExpiry(container) === false) {
-				return true;
+				return false;
 			}
 
 			if(this._hasExpired(container)) {
@@ -133,6 +127,12 @@ define([
 				expiry = new Date(this._getMeta(container).expiry);
 
 			return Math.ceil((expiry - now) / 1000);
+		},
+
+		ttl: function(key) {
+			var container = this._getContainer(key);
+
+			return this._ttl(container);
 		},
 
 		rename: function(oldKey, newKey) {
@@ -176,6 +176,7 @@ define([
 
 			var ttl = this.ttl(key);
 			if(ttl === 0 || ttl === false) {
+			var ttl = this._ttl(container);
 				return false;
 			} else {
 				return true;
