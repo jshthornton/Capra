@@ -4,8 +4,9 @@ define([
 	'use strict';
 	var cache = {
 		_prefix: 'cache_',
-		_ecRate: 3000,
 		ecTicker: null,
+		_ecRate: 3000,
+		_init: false,
 
 		_parse: function(data) {
 			return JSON.parse(data);
@@ -205,10 +206,16 @@ define([
 			}
 		},
 
+		_setupTicker: function() {
+			this.ecTicker = setInterval(this.flushExpired, this.ecRate);
+		},
+
 		initialize: function() {
 			_.bindAll(this);
 
-			this.ecTicker = setInterval(this.flushExpired, this._ecRate);
+			this._setupTicker();
+
+			this._init = true;
 		}
 	};
 
@@ -231,9 +238,20 @@ define([
 			}
 
 			return count;
+		}
+	});
+
+	Object.defineProperty(cache, 'ecRate', {
+		get: function() {
+			return this._ecRate;
 		},
-		configurable: false,
-		enumerable: false
+		set: function(value) {
+			clearInterval(this.ecTicker);
+			this._ecRate = value;
+			if(this._init === true) {
+				this._setupTicker();
+			}
+		}
 	});
 
 	return cache;
