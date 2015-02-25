@@ -15,7 +15,7 @@ define([
 		},
 
 		register: function(key, obj) {
-			if(obj instanceof Backbone.Collection === false) {
+			if(ring.instance(obj, Backbone.Collection) === false) {
 				throw new Error('Attempted to register non-collection instance');
 			}
 
