@@ -24,7 +24,7 @@ define([
 					_.forOwn(options.contains, function(relatedOptions, key) {
 						var relatedModel = store.getRelated(this, key);
 
-						if(relatedOptions === true) {
+						if(relatedOptions === null) {
 							relatedOptions = undefined;
 						}
 
