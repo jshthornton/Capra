@@ -1,8 +1,9 @@
 define([
 	'underscore',
 	'backbone',
-	'ring'
-], function(_, Backbone, ring) {
+	'ring',
+	'./cache/MemCache'
+], function(_, Backbone, ring, MemCache) {
 	'use strict';
 
 	return ring.create(_.extend({}, Backbone.Events, {
@@ -12,6 +13,7 @@ define([
 			_.bindAll(this);
 
 			this.collections = {};
+			this.requestCache = new MemCache();
 		},
 
 		register: function(key, obj) {
