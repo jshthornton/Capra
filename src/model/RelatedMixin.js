@@ -6,7 +6,15 @@ define([
 	return ring.create({
 
 		fetchTree: function(options) {
-			var store = this.collection.store;
+			var store;
+
+			try {
+				store = this.collection.store;
+			} catch(err) {
+				throw new Error('Model does not belong to a collection or store');
+			}
+
+			options = options || {};
 
 			var def = new $.Deferred();
 
