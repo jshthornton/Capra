@@ -66,21 +66,33 @@ define([
 
 				var promise = user.fetchTree();
 
+				expect(jasmine.Ajax.requests.count()).toEqual(1);
 				expect(promise).toBeTruthy();
 				expect(promise.state).toBeTruthy();
 			});
 
 			it('Should return a promise (branch)', function() {
-				/*jasmine.Ajax.stubRequest('/another/url').andReturn({
-					"responseText": 'immediate response'
-				});*/
+				jasmine.Ajax.stubRequest('/users/1').andReturn({
+					'status': 200,
+					'contentType': 'application/json',
+					'responseText': '{ "id": 1 }'
+				});
+
+				jasmine.Ajax.stubRequest('/profiles/1').andReturn({
+					'status': 200,
+					'contentType': 'application/json',
+					'responseText': '{ "id": 1,  "user": 1 }'
+				});
+
+				user.set('id', 1);
 
 				var promise = user.fetchTree({
 					contains: {
-						profile: true
+						profile: null
 					}
 				});
 
+				expect(jasmine.Ajax.requests.count()).toEqual(2);
 				expect(promise).toBeTruthy();
 				expect(promise.state).toBeTruthy();
 			});
