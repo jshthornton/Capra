@@ -88,7 +88,7 @@ define([
 
 		});
 
-		it('Should return cached request', function() {
+		it('Should create query string from params', function() {
 			this.model.set('id', 1);
 
 			this.model.fetch({
