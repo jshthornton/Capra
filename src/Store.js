@@ -33,6 +33,10 @@ define([
 			_.each(model.relationships, function(relationship) {
 				var related = this.getRelated(model, relationship.key);
 
+				if(related == null) {
+					return;
+				}
+
 				if(_.isArray(related) === false) {
 					related = [related];
 				}
