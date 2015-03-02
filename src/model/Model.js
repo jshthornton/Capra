@@ -37,15 +37,20 @@ define([
 		},
 
 		sync: function(method, model, options) {
-			options = _.defaults({
+			options = _.defaults(options, {
 				url: _.result(this, 'url')
-			}, options);
+			});
 
 			if(method === 'read') {
 				options = _.defaults(options, {
+					params: {},
 					setCache: true,
 					useCache: true
 				});
+
+				if(_.size(options.params) > 0) {
+					options.url = options.url + '?' + $.param(options.params);
+				}
 
 				if(options.useCache === true) {
 					try {
