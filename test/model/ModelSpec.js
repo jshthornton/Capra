@@ -87,5 +87,26 @@ define([
 			expect(onSuccess2).toHaveBeenCalled();
 
 		});
+
+		it('Should return cached request', function() {
+			this.model.set('id', 1);
+
+			this.model.fetch({
+				params: {
+					foo: 'bar'
+				},
+				success: function(model, response, options) {
+					expect(options.url).toEqual('/collection/1?foo=bar');
+				}
+			});
+
+			jasmine.Ajax.requests.mostRecent().respondWith({
+				'status': 200,
+				'contentType': 'application/json',
+				'responseText': '{}'
+			});
+
+
+		});
 	});
 });
