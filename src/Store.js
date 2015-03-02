@@ -47,12 +47,8 @@ define([
 			}, this);
 		},
 
-		getRelated: function(model, key) {
-			var collection,
-				attribute = model.get(key),
-				relationship;
-
-			relationship = _.find(model.relationships, function(relationship) {
+		_getRelationship: function(model, key) {
+			var relationship = _.find(model.relationships, function(relationship) {
 				return relationship.key === key;
 			});
 
@@ -60,12 +56,27 @@ define([
 				throw new Error('Relationship not found on model');
 			}
 
-			collection = this.collections[relationship.collection];
+			return relationship;
+		},
+
+		_getCollection: function(relationship) {
+			var collection = this.collections[relationship.collection];
 
 			if(collection == null) {
 				throw new Error('Collection ' + relationship.collection + ' not found');
 			}
 
+			return collection;
+		},
+
+		getRelated: function(model, key) {
+			var collection,
+				attribute = model.get(key),
+				relationship;
+
+			relationship = this._getRelationship(model, key);
+			collection = this._getCollection(relationship);
+			
 			if(relationship.type === 'hasOne') {
 				if(model.has(key)) {
 					return collection.get(attribute);
