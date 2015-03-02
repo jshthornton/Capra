@@ -99,6 +99,16 @@ define([
 					return model.id === relatedModel.get(relationship.foreignKey) || model.cid === relatedModel.get(relationship.foreignKey);
 				});
 			}
+		},
+
+		spawn: function(model, key) {
+			var collection,
+				relationship;
+
+			relationship = this._getRelationship(model, key);
+			collection = this._getCollection(relationship);
+
+			var relatedModel = collection.add();
 		}
 	}));
 });
