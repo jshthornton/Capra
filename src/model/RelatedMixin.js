@@ -16,11 +16,8 @@ define([
 			options = options || {};
 
 			if(_.has(options, 'contains') && _.isObject(options.contains)) {
-				// A Leaf
-				return this.fetch(options);
-			} else {
 				// A branch and a leaf
-				return this.fetch(options).then(function() {
+				return this.fetch(options).then(_.bind(function() {
 					_.forOwn(options.contains, function(relatedOptions, key) {
 						var relatedModel = store.getRelated(this, key);
 
@@ -28,9 +25,17 @@ define([
 							relatedOptions = undefined;
 						}
 
-						return relatedModel.fetchTree(relatedOptions);
+						if(relatedModel == null) {
+							
+						} else {
+							return relatedModel.fetchTree(relatedOptions);
+						}
+
 					}, this);
-				});
+				}, this));
+			} else {
+				// A Leaf
+				return this.fetch(options);
 			}
 		}
 	});
