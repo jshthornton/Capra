@@ -36,14 +36,23 @@ define([
 			}
 		},
 
+		defaultParams: function() {
+			return {};
+		},
+
+		defaultHeaders: function() {
+			return {};
+		},
+
 		sync: function(method, model, options) {
 			options = _.defaults(options, {
+				headers: _.defaults(_.result(this, 'defaultHeaders'), options.headers),
 				url: _.result(this, 'url')
 			});
 
 			if(method === 'read') {
 				options = _.defaults(options, {
-					params: {},
+					params: _.defaults(_.result(this, 'defaultParams'), options.params),
 					setCache: true,
 					useCache: true
 				});
