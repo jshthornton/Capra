@@ -136,6 +136,54 @@ define([
 				expect(_profile).toBeTruthy();
 				expect(_profile.id).toEqual(1);
 			});
+
+			it('Should resolve after response (leaf)', function() {
+				var promise = user.fetchTree();
+
+				expect(jasmine.Ajax.requests.count()).toEqual(1);
+				expect(promise).toBeTruthy();
+				expect(promise.state).toBeTruthy();
+				
+				expect(promise.state()).toEqual('pending');
+
+				jasmine.Ajax.requests.mostRecent().respondWith({
+					'status': 200,
+					'contentType': 'application/json',
+					'responseText': '{ "id": 1, "profile": 1 }'
+				});
+
+				expect(promise.state()).toEqual('resolved');
+			});
+
+			it('Should resolve after response (branch)', function() {
+				var promise = user.fetchTree({
+					contains: {
+						profile: null
+					}
+				});
+
+				expect(jasmine.Ajax.requests.count()).toEqual(1);
+				expect(promise).toBeTruthy();
+				expect(promise.state).toBeTruthy();
+				
+				expect(promise.state()).toEqual('pending');
+
+				jasmine.Ajax.requests.first().respondWith({
+					'status': 200,
+					'contentType': 'application/json',
+					'responseText': '{ "id": 1, "profile": 1 }'
+				});
+
+				expect(promise.state()).toEqual('pending');
+
+				jasmine.Ajax.requests.mostRecent().respondWith({
+					'status': 200,
+					'contentType': 'application/json',
+					'responseText': '{ "id": 1 }'
+				});
+
+				expect(promise.state()).toEqual('resolved');
+			});
 		});
 
 	});

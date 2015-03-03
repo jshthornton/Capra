@@ -1,7 +1,9 @@
 define([
 	'ring',
-	'underscore'
-], function(ring, _) {
+	'underscore',
+	'jquery',
+	'../when'
+], function(ring, _, $, when) {
 	return ring.create({
 
 		fetchTree: function(options) {
@@ -15,9 +17,12 @@ define([
 
 			options = options || {};
 
+
 			if(_.has(options, 'contains') && _.isObject(options.contains)) {
 				// A branch and a leaf
 				return this.fetch(options).then(_.bind(function() {
+					var promises = [];
+					
 					_.forOwn(options.contains, function(relatedOptions, key) {
 						var relatedModel = store.getRelated(this, key);
 
@@ -43,8 +48,10 @@ define([
 							relatedOptions.params[relationship.foreignKey] = relatedModel.get(relationship.foreignKey);
 						}
 
-						return relatedModel.fetchTree(relatedOptions);
+						promises.push(relatedModel.fetchTree(relatedOptions));
 					}, this);
+
+					return when.apply(when, promises);
 				}, this));
 			} else {
 				// A Leaf
