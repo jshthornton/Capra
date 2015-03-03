@@ -103,12 +103,27 @@ define([
 
 		spawn: function(model, key) {
 			var collection,
+				attribute = model.get(key),
 				relationship;
 
 			relationship = this._getRelationship(model, key);
 			collection = this._getCollection(relationship);
 
-			var relatedModel = collection.add();
+			var relatedModel = collection.add({});
+
+			if(relationship.type === 'hasOne') {
+				if(model.has(key)) {
+					relatedModel.set(relatedModel.idAttribute, attribute);
+				} else {
+					relatedModel.set(relationship.foreignKey, model.id || model.cid);
+				}
+			}
+
+			if(relationship.type === 'hasMany') {
+				relatedModel.set(relationship.foreignKey, model.id || model.cid);
+			}
+
+			return relatedModel;
 		}
 	}));
 });

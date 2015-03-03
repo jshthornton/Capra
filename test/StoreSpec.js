@@ -217,6 +217,135 @@ define([
 			});
 		});
 
+		describe('Spawning', function() {
+			describe('hasOne', function() {
+				beforeEach(function() {
+					var User = this.User = Backbone.Model.extend({
+						relationships: [
+							{
+								key: 'profile',
+								type: 'hasOne',
+								collection: 'profiles',
+								foreignKey: 'user'
+							}
+						]
+					});
+
+					var Profile = this.Profile = Backbone.Model.extend({
+						relationships: [
+							{
+								key: 'user',
+								type: 'hasOne',
+								collection: 'users',
+								foreignKey: 'profile'
+							}
+						]
+					});
+
+					var users = this.users = new Backbone.Collection(),
+						profiles = this.profiles = new Backbone.Collection();
+
+					users.model = User;
+					profiles.model = Profile;
+
+					this.store.register('users', users);
+					this.store.register('profiles', profiles);
+				});
+
+				it('Should spawn profile (with user cid)', function() {
+					var user = new this.User();
+
+					this.users.reset(user);
+
+					var profile = this.store.spawn(user, 'profile');
+					expect(profile instanceof this.Profile).toEqual(true);
+					expect(profile.get('user')).toEqual(user.cid);
+				});
+
+				it('Should spawn profile (with user id)', function() {
+					var user = new this.User({
+						id: 1
+					});
+
+					this.users.reset(user);
+
+					var profile = this.store.spawn(user, 'profile');
+					expect(profile instanceof this.Profile).toEqual(true);
+					expect(profile.get('user')).toEqual(user.id);
+				});
+
+				it('Should spawn profile (with profile id)', function() {
+					var user = new this.User({
+						profile: 1
+					});
+
+					this.users.reset(user);
+
+					var profile = this.store.spawn(user, 'profile');
+					expect(profile instanceof this.Profile).toEqual(true);
+					expect(profile.id).toEqual(user.get('profile'));
+				});
+			});
+
+			describe('hasMany', function() {
+				beforeEach(function() {
+					var User = this.User = Backbone.Model.extend({
+						relationships: [
+							{
+								key: 'profiles',
+								type: 'hasMany',
+								collection: 'profiles',
+								foreignKey: 'user'
+							}
+						]
+					});
+
+					var Profile = this.Profile = Backbone.Model.extend({
+						relationships: [
+							{
+								key: 'user',
+								type: 'hasOne',
+								collection: 'users',
+								foreignKey: 'profile'
+							}
+						]
+					});
+
+					var users = this.users = new Backbone.Collection(),
+						profiles = this.profiles = new Backbone.Collection();
+
+					users.model = User;
+					profiles.model = Profile;
+
+					this.store.register('users', users);
+					this.store.register('profiles', profiles);
+				});
+
+				it('Should spawn profile (with user cid)', function() {
+					var user = new this.User();
+
+					this.users.reset(user);
+
+					var profile = this.store.spawn(user, 'profiles');
+					expect(profile instanceof this.Profile).toEqual(true);
+					expect(profile.get('user')).toEqual(user.cid);
+				});
+
+				it('Should spawn profile (with user id)', function() {
+					var user = new this.User({
+						id: 1
+					});
+
+					this.users.reset(user);
+
+					var profile = this.store.spawn(user, 'profiles');
+					expect(profile instanceof this.Profile).toEqual(true);
+					expect(profile.get('user')).toEqual(user.id);
+				});
+			});
+		});
+
+
 		afterEach(function() {
 			this.evt.stopListening();
 		});
