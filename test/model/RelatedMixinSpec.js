@@ -27,6 +27,9 @@ define([
 				users = new Collection();
 				profiles = new Collection();
 
+				users.model = FauxModel;
+				profiles.model = FauxModel;
+
 				users.url = '/users';
 				profiles.url = '/profiles';
 
@@ -92,9 +95,14 @@ define([
 					}
 				});
 
+
 				expect(jasmine.Ajax.requests.count()).toEqual(2);
 				expect(promise).toBeTruthy();
 				expect(promise.state).toBeTruthy();
+
+				var _profile = this.store.getRelated(user, 'profile');
+				expect(_profile).toBeTruthy();
+				expect(_profile.get('user')).toEqual(user.id);
 			});
 
 			//it('Should ');

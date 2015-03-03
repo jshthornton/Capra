@@ -26,11 +26,10 @@ define([
 						}
 
 						if(relatedModel == null) {
-							
-						} else {
-							return relatedModel.fetchTree(relatedOptions);
+							relatedModel = store.spawn(this, key);
 						}
 
+						return relatedModel.fetchTree(relatedOptions);
 					}, this);
 				}, this));
 			} else {
