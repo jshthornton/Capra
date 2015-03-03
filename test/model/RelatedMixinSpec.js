@@ -282,6 +282,59 @@ define([
 				expect(jasmine.Ajax.requests.at(1).url).toEqual('/profiles/1');
 				expect(jasmine.Ajax.requests.mostRecent().url).toEqual('/genders/1');
 			});
+
+			it('Should cache double requests', function() {
+				jasmine.Ajax.stubRequest('/users/1').andReturn({
+					'status': 200,
+					'contentType': 'application/json',
+					'responseText': '{ "id": 1, "profile": 1, "special_profile": 2 }'
+				});
+
+				jasmine.Ajax.stubRequest('/profiles/1').andReturn({
+					'status': 200,
+					'contentType': 'application/json',
+					'responseText': '{ "id": 1, "gender": 1 }'
+				});
+
+				jasmine.Ajax.stubRequest('/profiles/2').andReturn({
+					'status': 200,
+					'contentType': 'application/json',
+					'responseText': '{ "id": 1, "gender": 1 }'
+				});
+
+				jasmine.Ajax.stubRequest('/genders/1').andReturn({
+					'status': 200,
+					'contentType': 'application/json',
+					'responseText': '{ "id": 1 }'
+				});
+
+				user.set('id', 1);
+
+				user.relationships.push({
+					key: 'special_profile',
+					type: 'hasOne',
+					collection: 'profiles',
+					foreignKey: 'user'
+				});
+
+				var promise = user.fetchTree({
+					contains: {
+						profile: {
+							contains: {
+								gender: null
+							}
+						},
+						special_profile: {
+							contains: {
+								gender: null
+							}
+						}
+					}
+				});
+				
+				expect(true).toEqual(false); // This current stream is not working.
+				expect(jasmine.Ajax.requests.count()).toEqual(4);
+			});
 		});
 
 	});
