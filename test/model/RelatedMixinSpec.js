@@ -299,7 +299,7 @@ define([
 				jasmine.Ajax.stubRequest('/profiles/2').andReturn({
 					'status': 200,
 					'contentType': 'application/json',
-					'responseText': '{ "id": 1, "gender": 1 }'
+					'responseText': '{ "id": 2, "gender": 1 }'
 				});
 
 				jasmine.Ajax.stubRequest('/genders/1').andReturn({
@@ -332,7 +332,10 @@ define([
 					}
 				});
 				
-				expect(true).toEqual(false); // This current stream is not working.
+				var special_profile = store.getRelated(user, 'special_profile');
+				expect(special_profile).toBeTruthy();
+				var gender = store.getRelated(special_profile, 'gender');
+				expect(gender).toBeTruthy();
 				expect(jasmine.Ajax.requests.count()).toEqual(4);
 			});
 		});
