@@ -57,6 +57,19 @@ define([
 				// A Leaf
 				return this.fetch(options);
 			}
+		},
+
+		getRelated: function(key) {
+			// Just a convenince wrapper
+			var store;
+
+			try {
+				store = this.collection.store;
+			} catch(err) {
+				throw new Error('Model does not belong to a collection or store');
+			}
+
+			return store.getRelated(this, key);
 		}
 	});
 });
