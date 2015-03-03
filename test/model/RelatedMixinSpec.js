@@ -63,10 +63,6 @@ define([
 			});
 
 			it('Should return a promise (leaf)', function() {
-				/*jasmine.Ajax.stubRequest('/another/url').andReturn({
-					"responseText": 'immediate response'
-				});*/
-
 				var promise = user.fetchTree();
 
 				expect(jasmine.Ajax.requests.count()).toEqual(1);
@@ -74,14 +70,14 @@ define([
 				expect(promise.state).toBeTruthy();
 			});
 
-			it('Should return a promise (branch)', function() {
+			it('Should return a promise (branch) (hasOne - other)', function() {
 				jasmine.Ajax.stubRequest('/users/1').andReturn({
 					'status': 200,
 					'contentType': 'application/json',
 					'responseText': '{ "id": 1 }'
 				});
 
-				jasmine.Ajax.stubRequest('/profiles/1').andReturn({
+				jasmine.Ajax.stubRequest('/profiles?user=1').andReturn({
 					'status': 200,
 					'contentType': 'application/json',
 					'responseText': '{ "id": 1,  "user": 1 }'
@@ -95,17 +91,51 @@ define([
 					}
 				});
 
-
 				expect(jasmine.Ajax.requests.count()).toEqual(2);
+				expect(jasmine.Ajax.requests.first().url).toEqual('/users/1');
+				expect(jasmine.Ajax.requests.mostRecent().url).toEqual('/profiles?user=1');
+
 				expect(promise).toBeTruthy();
 				expect(promise.state).toBeTruthy();
 
 				var _profile = this.store.getRelated(user, 'profile');
 				expect(_profile).toBeTruthy();
+				expect(_profile.id).toEqual(1);
 				expect(_profile.get('user')).toEqual(user.id);
 			});
 
-			//it('Should ');
+			it('Should return a promise (branch) (hasOne - self)', function() {
+				jasmine.Ajax.stubRequest('/users/1').andReturn({
+					'status': 200,
+					'contentType': 'application/json',
+					'responseText': '{ "id": 1, "profile": 1 }'
+				});
+
+				jasmine.Ajax.stubRequest('/profiles/1').andReturn({
+					'status': 200,
+					'contentType': 'application/json',
+					'responseText': '{ "id": 1 }'
+				});
+
+				user.set('id', 1);
+
+				var promise = user.fetchTree({
+					contains: {
+						profile: null
+					}
+				});
+
+				expect(jasmine.Ajax.requests.count()).toEqual(2);
+				expect(jasmine.Ajax.requests.first().url).toEqual('/users/1');
+				expect(jasmine.Ajax.requests.mostRecent().url).toEqual('/profiles/1');
+
+				expect(promise).toBeTruthy();
+				expect(promise.state).toBeTruthy();
+
+				var _profile = this.store.getRelated(user, 'profile');
+				expect(_profile).toBeTruthy();
+				expect(_profile.id).toEqual(1);
+			});
 		});
 
 	});

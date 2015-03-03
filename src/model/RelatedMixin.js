@@ -29,6 +29,20 @@ define([
 							relatedModel = store.spawn(this, key);
 						}
 
+						if(relatedModel.isNew()) {
+							var collection,
+								relationship;
+
+							relationship = store.getRelationship(this, key);
+							collection = store.getCollection(relationship);
+
+							relatedOptions = _.merge(relatedOptions || {}, {
+								params: {}
+							});
+
+							relatedOptions.params[relationship.foreignKey] = relatedModel.get(relationship.foreignKey);
+						}
+
 						return relatedModel.fetchTree(relatedOptions);
 					}, this);
 				}, this));

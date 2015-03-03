@@ -47,7 +47,7 @@ define([
 			}, this);
 		},
 
-		_getRelationship: function(model, key) {
+		getRelationship: function(model, key) {
 			var relationship = _.find(model.relationships, function(relationship) {
 				return relationship.key === key;
 			});
@@ -59,7 +59,7 @@ define([
 			return relationship;
 		},
 
-		_getCollection: function(relationship) {
+		getCollection: function(relationship) {
 			var collection = this.collections[relationship.collection];
 
 			if(collection == null) {
@@ -74,8 +74,8 @@ define([
 				attribute = model.get(key),
 				relationship;
 
-			relationship = this._getRelationship(model, key);
-			collection = this._getCollection(relationship);
+			relationship = this.getRelationship(model, key);
+			collection = this.getCollection(relationship);
 			
 			if(relationship.type === 'hasOne') {
 				if(model.has(key)) {
@@ -106,8 +106,8 @@ define([
 				attribute = model.get(key),
 				relationship;
 
-			relationship = this._getRelationship(model, key);
-			collection = this._getCollection(relationship);
+			relationship = this.getRelationship(model, key);
+			collection = this.getCollection(relationship);
 
 			var relatedModel = collection.add({});
 
