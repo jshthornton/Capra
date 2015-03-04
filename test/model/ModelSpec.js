@@ -88,6 +88,30 @@ define([
 
 		});
 
+		it('Should call error for cached', function() {
+			this.model.set('id', 1);
+
+			var onError1 = jasmine.createSpy('onError1'),
+				onError2 = jasmine.createSpy('onError2'); 
+
+			var rtn1 = this.model.fetch({
+				error: onError1
+			});
+			var rtn2 = this.model.fetch({
+				error: onError2
+			});
+
+			jasmine.Ajax.requests.mostRecent().respondWith({
+				'status': 403,
+				'contentType': 'application/json',
+				'responseText': '{}'
+			});
+
+			expect(onError1).toHaveBeenCalled();
+			expect(onError2).toHaveBeenCalled();
+
+		});
+
 		it('Should create query string from params', function() {
 			this.model.set('id', 1);
 
