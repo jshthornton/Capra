@@ -3,17 +3,7 @@ define([
 	'jquery'
 ], function(_, $) {
 	return {
-		sync: function(method, model, options) {
-			var store, 
-				cache;
-
-			try {
-				store = model.collection.store;
-				cache = store.requestCache;
-			} catch(err) {
-				throw new Error('Could not find request cache for model');
-			}
-
+		sync: function(cache, method, model, options) {
 			if(cache.exists(options.url) === false) {
 				throw new Error('Request not in cache');
 			}

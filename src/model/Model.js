@@ -62,8 +62,16 @@ define([
 				}
 
 				if(options.useCache === true) {
+					var cache;
+
 					try {
-						return cacheSync.sync(method, model, options);
+						cache = model.collection.store.requestCache;
+					} catch(err) {
+						throw new Error('Could not find request cache for model');
+					}
+
+					try {
+						return cacheSync.sync(cache, method, model, options);
 					} catch(err) {}
 				}
 			}
