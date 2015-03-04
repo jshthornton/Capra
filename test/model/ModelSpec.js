@@ -68,14 +68,16 @@ define([
 			this.model.set('id', 1);
 
 			var onSuccess1 = jasmine.createSpy('onSuccess1'),
-				onSuccess2 = jasmine.createSpy('onSuccess2'); 
+				onSuccess2 = jasmine.createSpy('onSuccess2'),
+				onResolved1 = jasmine.createSpy('onResolved1'),
+				onResolved2 = jasmine.createSpy('onResolved2');
 
 			var rtn1 = this.model.fetch({
 				success: onSuccess1
-			});
+			}).then(onResolved1);
 			var rtn2 = this.model.fetch({
 				success: onSuccess2
-			});
+			}).then(onResolved2);
 
 			jasmine.Ajax.requests.mostRecent().respondWith({
 				'status': 200,
@@ -85,7 +87,28 @@ define([
 
 			expect(onSuccess1).toHaveBeenCalled();
 			expect(onSuccess2).toHaveBeenCalled();
+			expect(onResolved1).toHaveBeenCalled();
+			expect(onResolved2).toHaveBeenCalled();
 
+		});
+
+		it('Should call resolved for cached', function() {
+			this.model.set('id', 1);
+
+			var onResolved1 = jasmine.createSpy('onResolved1'),
+				onResolved2 = jasmine.createSpy('onResolved2');
+
+			var rtn1 = this.model.fetch().then(onResolved1);
+			var rtn2 = this.model.fetch().then(onResolved2);
+
+			jasmine.Ajax.requests.mostRecent().respondWith({
+				'status': 200,
+				'contentType': 'application/json',
+				'responseText': '{}'
+			});
+
+			expect(onResolved1).toHaveBeenCalled();
+			expect(onResolved2).toHaveBeenCalled();
 		});
 
 		it('Should call error for cached', function() {
@@ -110,6 +133,25 @@ define([
 			expect(onError1).toHaveBeenCalled();
 			expect(onError2).toHaveBeenCalled();
 
+		});
+
+		it('Should call reject for cached', function() {
+			this.model.set('id', 1);
+
+			var onReject1 = jasmine.createSpy('onReject1'),
+				onReject2 = jasmine.createSpy('onReject2');
+
+			var rtn1 = this.model.fetch().then(function() {}, onReject1);
+			var rtn2 = this.model.fetch().then(function() {}, onReject2);
+
+			jasmine.Ajax.requests.mostRecent().respondWith({
+				'status': 403,
+				'contentType': 'application/json',
+				'responseText': '{}'
+			});
+
+			expect(onReject1).toHaveBeenCalled();
+			expect(onReject2).toHaveBeenCalled();
 		});
 
 		it('Should create query string from params', function() {
