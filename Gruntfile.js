@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 
 		jshint: {
 			// Rules are NOT merged.
-			app: {
+			src: {
 				options: {
 					jshintrc: '.jshintrc'
 				},
@@ -67,12 +67,24 @@ module.exports = function(grunt) {
 				singleRun: false
 			}
 		},
+
+		watch: {
+			src: {
+				files: [
+					'src/**/*.js'
+				],
+				tasks: [
+					'jshint:src'
+				]
+			}
+		}
 	});
 
 	// Load Tasks
 	grunt.loadNpmTasks('grunt-contrib-connect');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-karma');
+	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	// Create Tasks
 };
