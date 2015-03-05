@@ -195,7 +195,7 @@ define([
 				var _gender = this.store.getRelated(profile, 'gender');
 				expect(_gender).toBeTruthy();
 				expect(_gender.id).toEqual(1);
-				expect(store.getRelated(_gender, 'profiles').length).toEqual(1);
+				expect(this.store.getRelated(_gender, 'profiles').length).toEqual(1);
 			});
 
 			it('Should resolve after response (leaf)', function() {
@@ -332,9 +332,9 @@ define([
 					}
 				});
 				
-				var special_profile = store.getRelated(user, 'special_profile');
+				var special_profile = this.store.getRelated(user, 'special_profile');
 				expect(special_profile).toBeTruthy();
-				var gender = store.getRelated(special_profile, 'gender');
+				var gender = this.store.getRelated(special_profile, 'gender');
 				expect(gender).toBeTruthy();
 				expect(jasmine.Ajax.requests.count()).toEqual(4);
 			});
