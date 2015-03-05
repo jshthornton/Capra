@@ -2,6 +2,7 @@ define([
 	'underscore',
 	'jquery'
 ], function(_, $) {
+	'use strict';
 	return {
 		sync: function(cache, method, model, options) {
 			if(cache.exists(options.url) === false) {

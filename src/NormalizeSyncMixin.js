@@ -3,6 +3,7 @@ define([
 	'jquery',
 	'ring'
 ], function(_, $, ring) {
+	'use strict';
 	return ring.create({
 		_wrapJQXHR: function(xhr, model, options) {
 			var def = new $.Deferred();

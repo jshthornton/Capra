@@ -6,6 +6,7 @@ define([
 
 	'nodeNab'
 ], function(Backbone, _, HashMap, ring) {
+	'use strict';
 	return ring.create([Backbone.View], {
 		_cidPrefix: 'view',
 		props: null, // HashMap

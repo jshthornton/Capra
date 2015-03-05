@@ -2,6 +2,7 @@ define([
 	'ring',
 	'../HashMap'
 ], function(ring, HashMap) {
+	'use strict';
 	return ring.create({
 		children: null,
 

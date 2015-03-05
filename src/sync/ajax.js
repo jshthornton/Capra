@@ -3,6 +3,7 @@ define([
 	'../NormalizeSyncMixin',
 	'backbone'
 ], function(ring, NormalizeSyncMixin, Backbone) {
+	'use strict';
 	var Cls = ring.create([NormalizeSyncMixin], {
 		sync: function(method, model, options) {
 			var xhr = Backbone.sync(method, model, options);

@@ -3,6 +3,7 @@ define([
 	'./AbstractCache',
 	'underscore'
 ], function(ring, AbstractCache, _) {
+	'use strict';
 	return ring.create([AbstractCache], {
 		ecTicker: null,
 		_ecRate: 3000,

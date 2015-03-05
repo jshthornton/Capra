@@ -4,6 +4,7 @@ define([
 	'./TransitionState',
 	'../util/element'
 ], function(_, ring, TransitionState, elementUtil) {
+	'use strict';
 	return ring.create({
 		_initialState: function(options) {
 			this.$super(options);

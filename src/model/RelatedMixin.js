@@ -4,6 +4,7 @@ define([
 	'jquery',
 	'../when'
 ], function(ring, _, $, when) {
+	'use strict';
 	return ring.create({
 
 		fetchTree: function(options) {

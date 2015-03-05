@@ -2,6 +2,7 @@ define([
 	'underscore',
 	'jquery'
 ], function(_, $) {
+	'use strict';
 	return {
 		isAttached: function(element) {
 			if(_.isElement(element) === false) {

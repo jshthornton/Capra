@@ -3,6 +3,7 @@ define([
 	'backbone',
 	'underscore'
 ], function(ring, Backbone, _) {
+	'use strict';
 	return ring.create([Backbone.Collection], {
 		initialize: function() {
 			_.bindAll(this);

@@ -6,6 +6,7 @@ define([
 	'../sync/ajax',
 	'../sync/cache'
 ], function(ring, Backbone, _, $, ajaxSync, cacheSync) {
+	'use strict';
 	return ring.create([Backbone.Model], {
 		expiry: 60,
 
