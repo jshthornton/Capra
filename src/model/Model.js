@@ -24,10 +24,7 @@ define([
 			}
 
 			try {
-				store = this.collection.store;
-				cache = store.requestCache;
-				
-				cache.set(options.url, options.data, {
+				this.collection.store.requestCache.set(options.url, options.data, {
 					expiry: options.expiry
 				});
 
@@ -78,9 +75,6 @@ define([
 			}
 
 			var rtn = ajaxSync.sync(method, model, options);
-
-			var cache,
-				store;
 
 			if(method === 'read') {
 				if(options.setCache === true) {
