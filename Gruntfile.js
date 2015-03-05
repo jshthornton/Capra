@@ -30,11 +30,42 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+
+		karma: {
+			debug: {
+				browsers: ['Chrome'],
+				reporters: ['progress'],
+				autoWatch: true,
+				singleRun: false
+			},
+			ci: {
+				configFile: 'karma.conf.js',
+				reporters: ['progress', 'coverage'],
+				singleRun: true,
+				browsers: ['PhantomJS'],
+				autoWatch: false
+			},
+			comprehensive: {
+				configFile: 'karma.conf.js',
+				reporters: ['progress', 'coverage'],
+				browsers: ['PhantomJS', 'Chrome', 'Firefox', 'IE', 'IE9'],
+				autoWatch: true,
+				singleRun: false
+			},
+			modern: {
+				configFile: 'karma.conf.js',
+				reporters: ['progress', 'coverage'],
+				browsers: ['PhantomJS', 'Chrome', 'Firefox', 'IE'],
+				autoWatch: true,
+				singleRun: false
+			}
+		},
 	});
 
 	// Load Tasks
 	grunt.loadNpmTasks('grunt-contrib-connect');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-karma');
 
 	// Create Tasks
 };
