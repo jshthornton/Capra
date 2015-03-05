@@ -1,0 +1,28 @@
+{
+	"curly": true,
+	"eqeqeq": true,
+	"eqnull": true,
+	"browser": true,
+	"camelcase": true,
+	"forin": true,
+	"freeze": true,
+	"immed": true,
+	"newcap": true,
+	"noarg": true,
+	"noempty": true,
+	"nonbsp": true,
+	"quotmark": "single",
+	"undef": true,
+	"unused": "vars",
+	"strict": true,
+	"maxdepth": 3,
+	"latedef": true,
+	"es3": true,
+	"indent": 4,
+	"globals": {
+		"require": true,
+		"define": true,
+		"console": true,
+		"JSON": true
+	}
+}
