@@ -18,17 +18,20 @@ define([
 				get: function() {
 					var count = 0;
 					for(var i = 0; i < localStorage.length; i++){
-						if(_.startsWith(localStorage.key(i), this._prefix)) {
-							var rawKey = localStorage.key(i),
-								fauxKey = rawKey.slice(this._prefix.length);
-
-							try {
-								var container = this._getContainer(fauxKey);
-								if(this._hasExpired(container) === false) {
-									count++;
-								}
-							} catch(err) {}
+						if(_.startsWith(localStorage.key(i), this._prefix) === false) {
+							continue;
 						}
+
+						
+						var rawKey = localStorage.key(i),
+							fauxKey = rawKey.slice(this._prefix.length);
+
+						try {
+							var container = this._getContainer(fauxKey);
+							if(this._hasExpired(container) === false) {
+								count++;
+							}
+						} catch(err) {}
 					}
 
 					return count;
