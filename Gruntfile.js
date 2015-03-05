@@ -58,6 +58,13 @@ module.exports = function(grunt) {
 				browsers: ['PhantomJS', 'Chrome', 'Firefox', 'IE'],
 				autoWatch: true,
 				singleRun: false
+			},
+			light: {
+				configFile: 'karma.conf.js',
+				reporters: ['progress', 'coverage'],
+				browsers: ['PhantomJS'],
+				autoWatch: true,
+				singleRun: false
 			}
 		},
 	});
