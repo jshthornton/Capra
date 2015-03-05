@@ -1,7 +1,8 @@
 define([
 	'capra/HashMap',
-	'backbone'
-], function(HashMap, Backbone) {
+	'backbone',
+	'underscore'
+], function(HashMap, Backbone, _) {
 	describe('capra/HashMap', function() {
 		beforeEach(function() {
 			this.evt = _.extend({}, Backbone.Events);
@@ -65,6 +66,16 @@ define([
 			this.hashmap.unset('test');
 
 			expect(this.hashmap.get('test')).toEqual(undefined);
+		});
+
+		it('Should clear', function() {
+			this.hashmap.set({
+				foo: 'bar',
+				one: 'two'
+			});
+			expect(_.size(this.hashmap.properties)).toEqual(2);
+			this.hashmap.clear();
+			expect(_.size(this.hashmap.properties)).toEqual(0);
 		});
 
 		afterEach(function() {
