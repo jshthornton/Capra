@@ -1,7 +1,8 @@
 define([
 	'ring',
-	'../HashMap'
-], function(ring, HashMap) {
+	'../HashMap',
+	'underscore'
+], function(ring, HashMap, _) {
 	'use strict';
 	return ring.create({
 		children: null,
