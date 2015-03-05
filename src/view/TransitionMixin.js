@@ -31,6 +31,6 @@ define([
 		transitionOut: function() {
 			this.props.set('transition', TransitionState.PROGRESS_OUT);
 			this.props.set('transition', TransitionState.OUT);
-		},
+		}
 	});
 });
