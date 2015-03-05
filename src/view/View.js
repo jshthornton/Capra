@@ -3,9 +3,10 @@ define([
 	'underscore',
 	'../HashMap',
 	'ring',
+	'jquery',
 
 	'nodeNab'
-], function(Backbone, _, HashMap, ring) {
+], function(Backbone, _, HashMap, ring, $) {
 	'use strict';
 	return ring.create([Backbone.View], {
 		_cidPrefix: 'view',
