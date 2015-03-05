@@ -87,6 +87,8 @@ define([
 				i;
 
 			_.forOwn(this._hash, function(item, key) {
+				var result;
+
 				if(_.isFunction(cb)) {
 					result = cb.call(this, key);
 				} else {
