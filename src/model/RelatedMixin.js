@@ -7,14 +7,16 @@ define([
 	'use strict';
 	return ring.create({
 
-		fetchTree: function(options) {
-			var store;
-
+		getStore: function() {
 			try {
-				store = this.collection.store;
+				return this.collection.store;
 			} catch(err) {
 				throw new Error('Model does not belong to a collection or store');
 			}
+		},
+
+		fetchTree: function(options) {
+			var store = this.getStore();
 
 			options = options || {};
 
