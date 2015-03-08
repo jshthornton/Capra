@@ -5,10 +5,6 @@ define([
 ], function(ring, Backbone, _) {
 	'use strict';
 	return ring.create([Backbone.Collection], {
-		initialize: function() {
-			_.bindAll(this);
-		},
-
 		_prepareModel: function(attrs, options) {
 	      if (ring.instance(attrs, Backbone.Model)) {
 	      	return attrs;
