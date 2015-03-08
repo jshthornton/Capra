@@ -16,17 +16,28 @@ define([
 			this.requestCache = new MemCache();
 		},
 
-		register: function(key, obj) {
-			if(ring.instance(obj, Backbone.Collection) === false) {
-				throw new Error('Attempted to register non-collection instance');
+		register: function() {
+			var collections;
+
+			if(_.isObject(arguments[0])) {
+				collections = arguments[0];
+			} else {
+				collections = {};
+				collections[arguments[0]] = arguments[1];
 			}
 
-			obj.store = this;
-			this.collections[key] = obj;
+			_.forOwn(collections, function(collection, key) {
+				if(ring.instance(collection, Backbone.Collection) === false) {
+					throw new Error('Attempted to register non-collection instance');
+				}
 
-			this.listenTo(obj, 'change:id', function(model) {
-				this._propogateIdChange(model);
-			});
+				collection.store = this;
+				this.collections[key] = collection;
+
+				this.listenTo(collection, 'change:id', function(model) {
+					this._propogateIdChange(model);
+				});
+			}, this);
 		},
 
 		_propogateIdChange: function(model) {
