@@ -77,6 +77,18 @@ module.exports = function(grunt) {
 					'jshint:src'
 				]
 			}
+		},
+
+		concurrent: {
+			dev: {
+				tasks: [
+					'karma:light',
+					'watch:src'
+				],
+				options: {
+					logConcurrentOutput: true
+				}
+			}
 		}
 	});
 
@@ -85,6 +97,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-karma');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-concurrent');
 
 	// Create Tasks
 };
