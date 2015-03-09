@@ -9,6 +9,10 @@ define([
 			this.FauxView = ring.create([TransitionMixin, View], {});
 		});
 
+		afterEach(function() {
+			$(document.body).empty();
+		});
+
 		it('Should auto transition', function() {
 			var $el = $('<div/>');
 			$(document.body).append($el);

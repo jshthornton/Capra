@@ -23,6 +23,7 @@ require.config({
     'underscore': 'lib/underscore',
     'jquery': 'lib/jquery',
     'nodeNab': 'lib/node-nab',
+    'jquery-ui': 'lib/jquery-ui',
     'capra': 'src'
   },
 
