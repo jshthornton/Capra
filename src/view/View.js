@@ -32,6 +32,10 @@ define([
 			if(this.props.get('autoRender') === true) {
 				this.render();
 			}
+
+			if(this.props.get('autoStartup') === true) {
+				this.startup();
+			}
 		},
 
 		_initialState: function(options) {
@@ -106,10 +110,6 @@ define([
 			this._afterRender();
 
 			this.props.set('isRendered', true);
-
-			if(this.props.get('autoStartup') === true) {
-				this.startup();
-			}
 
 			return this;
 		},
