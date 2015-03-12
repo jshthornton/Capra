@@ -8,10 +8,24 @@ define([
 	'nodeNab'
 ], function(Backbone, _, HashMap, ring, $) {
 	'use strict';
+
+	var delegateTriggerSplitter = /^(\S+)\s*(.*)$/;
+	var viewOptions = ['model', 'collection', 'el', 'id', 'attributes', 'className', 'tagName', 'events'];
+
 	return ring.create([Backbone.View], {
 		_cidPrefix: 'view',
 		props: null, // HashMap
 		template: null,
+
+		constructor: function(options) {
+			options || (options = {});
+			this.cid = options.cid || _.uniqueId('view');
+			_.extend(this, _.pick(options, viewOptions));
+			this._ensureElement();
+			this.initialize.apply(this, arguments);
+			this.delegateTriggers();
+			this.delegateEvents();
+		},
 
 		// Init
 		initialize: function(options) {
@@ -57,10 +71,6 @@ define([
 		},
 
 		_mixinOptions: function(options) {
-			if(_.isString(options.cid)) {
-				this.cid = options.cid;
-			}
-
 			if(_.isObject(options.props)) {
 				this.props.set(options.props);
 			}
@@ -68,16 +78,26 @@ define([
 			this.options = options;
 		},
 
-		setElement: function() {
+		setElement: function(element, delegate) {
 			if(this.$el instanceof $) {
 				this.$el.removeAttr('data-view-cid');
 			}
 
+			if(this.$el) {
+				this.undelegateTriggers();
+			}
+
 			this.$super.apply(this, arguments);
+
+			if (delegate !== false) {
+				this.delegateTriggers();
+			}
 
 			this.$el.attr({
 				'data-view-cid': this.cid
 			});
+
+			return this;
 		},
 
 		// Render
@@ -150,8 +170,43 @@ define([
 			this.$super(options);
 			this.props.set('isRemoved', true);
 			return this;
-		}
+		},
 
 		// DOM Events
+		triggers: {},
+
+		delegateTriggers: function(triggers) {
+			if (!(triggers || (triggers = _.result(this, 'triggers')))) {
+				return this;
+			}
+
+			this.undelegateTriggers();
+			for (var key in triggers) {
+				var triggerName = triggers[key];
+				if (!_.isString(triggerName)){
+					continue;
+				}
+
+				var match = key.match(delegateTriggerSplitter);
+				var eventName = match[1], selector = match[2];
+
+				var method = _.bind(function() {
+					this.trigger.apply(this, [triggerName].concat(arguments));
+				}, this);
+
+				eventName += '.delegateTriggers' + this.cid;
+				if (selector === '') {
+					this.$el.on(eventName, method);
+				} else {
+					this.$el.on(eventName, selector, method);
+				}
+			}
+			return this;
+		},
+
+		undelegateTriggers: function() {
+			this.$el.off('.delegateTriggers' + this.cid);
+			return this;
+		}
 	});
 });
