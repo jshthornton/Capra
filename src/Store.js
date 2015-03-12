@@ -94,7 +94,7 @@ define([
 				} else {
 					return _.find(collection.models, function(relatedModel) {
 						if(relationship.foreignKey == null) {
-							throw new Error('Foreign Key not found');
+							return;
 						}
 
 						return model.id === relatedModel.get(relationship.foreignKey) || model.cid === relatedModel.get(relationship.foreignKey);
