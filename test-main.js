@@ -24,6 +24,7 @@ require.config({
     'jquery': 'lib/jquery',
     'nodeNab': 'lib/node-nab',
     'jquery-ui': 'lib/jquery-ui',
+    'marionette': 'lib/backbone.marionette',
     'capra': 'src'
   },
 
