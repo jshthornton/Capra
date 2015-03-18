@@ -16,47 +16,76 @@ define([
 			return $.contains(document.documentElement, element);
 		},
 
-		openTag: function(options) {
-			function toAttr(key, value) {
-				var parsedKey,
-					parsedValue;
-
-				switch(key) {
-					case 'tagName':
-						return value;
-					case 'className':
-						parsedKey = 'class';
-
-						if(_.isArray(value)) {
-							parsedValue = value.join(' ');
-						}
-						break;
-					default:
-						parsedKey = key;
-						parsedValue = value;
-						break;
-				}
-
-				if(parsedKey !== null && parsedValue !== null) {
-					return parsedKey + '=' + '"' + parsedValue + '"';
-				} else {
-					return undefined;
-				}
-			};
+		serializeAttributes: function(data, options) {
+			var attributes = [];
 
 			options = _.extend({
-				tagName: 'div'
-			}. options);
+				join: true
+			}, options || {});
 
-			var el = ['<'];
-			
-			_.forOwn(options, function(value, key) {
-				el.push(toAttr(key, value));
-			});
+			_.forOwn(data, function(value, key) {
+				var attribute = this.serializeAttribute(key, value);
+				if(attribute != null) {
+					attributes.push(attribute);
+				}
+			}, this);
 
-			el.push('>');
+			if(options.join === true) {
+				return attributes.join(' ');
+			}
 
-			return el.join(' ');
+			return attributes;
+		},
+
+		serializeAttribute: function(key, value) {
+			var parsedKey,
+				parsedValue;
+
+			switch(key) {
+				// Where key = value
+				case 'tagName':
+					parsedKey = value;
+					break;
+				// Where bools can be used
+				// Where no value, but key is used
+				case 'disabled':
+				case 'checked':
+					if(value === true || value === key) {
+						parsedKey = key;
+					}
+					break;
+				case 'className':
+					parsedKey = 'class';
+
+					if(_.isArray(value)) {
+						parsedValue = value.join(' ');
+					} else if(_.isString(value)) {
+						parsedValue = value;
+					}
+					break;
+				default:
+					parsedKey = key;
+					parsedValue = value;
+					break;
+			}
+
+			if(parsedKey != null) {
+				if(parsedValue != null) {
+					return parsedKey + '=' + '"' + parsedValue + '"';
+				}
+
+				return parsedKey;
+			}
+
+			return undefined;
+		},
+
+		openTag: function(data) {
+			var el = '<';
+			el += this.serializeAttributes(data);
+			el += '>';
+
+			return el;
 		}
 	};
 });
