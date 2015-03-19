@@ -42,19 +42,21 @@ define([
 
 		_propogateIdChange: function(model) {
 			_.each(model.relationships, function(relationship) {
-				var related = this.getRelated(model, relationship.key);
+				try {
+					var related = this.getRelated(model, relationship.key);
 
-				if(related == null) {
-					return;
-				}
+					if(related == null) {
+						return;
+					}
 
-				if(_.isArray(related) === false) {
-					related = [related];
-				}
+					if(_.isArray(related) === false) {
+						related = [related];
+					}
 
-				_.each(related, function(relatedModel) {
-					relatedModel.set(relationship.foreignKey, model.id);
-				}, this);
+					_.each(related, function(relatedModel) {
+						relatedModel.set(relationship.foreignKey, model.id);
+					}, this);
+				} catch(err) {}
 			}, this);
 		},
 
