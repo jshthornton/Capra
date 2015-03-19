@@ -1,11 +1,11 @@
 define([
-	'capra/view/JQUIMixin',
+	'capra/views/JQUIMixin',
 	'ring',
 	'marionette',
 
 	'jquery-ui'
 ], function(JQUIMixin, ring, Marionette) {
-	describe('capra/view/JQUIMixin', function() {
+	describe('capra/views/JQUIMixin', function() {
 		beforeAll(function() {
 			this.FauxView = ring.create([JQUIMixin, Marionette.View], {});
 		});

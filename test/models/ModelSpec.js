@@ -1,10 +1,10 @@
 define([
-	'capra/model/Model',
+	'capra/models/Model',
 	'capra/Store',
-	'capra/collection/Collection',
+	'capra/collections/Collection',
 	'underscore'
 ], function(Model, Store, Collection, _) {
-	describe('capra/model/Model', function() {
+	describe('capra/models/Model', function() {
 		beforeEach(function() {
 			jasmine.Ajax.install();
 

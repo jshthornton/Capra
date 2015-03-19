@@ -1,7 +1,7 @@
 define([
-	'capra/cache/LocalStorageCache'
+	'capra/caches/LocalStorageCache'
 ], function(Cache) {
-	describe('capra/cache/LocalStorageCache', function() {
+	describe('capra/caches/LocalStorageCache', function() {
 		beforeEach(function() {
 			localStorage.clear();
 			this.cache = new Cache();

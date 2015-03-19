@@ -1,10 +1,10 @@
 define([
 	'ring',
 	'underscore',
-	'capra/collection/Collection',
-	'capra/model/Model'
+	'capra/collections/Collection',
+	'capra/models/Model'
 ], function(ring, _, Collection, Model) {
-	describe('capra/collection/Collection', function() {
+	describe('capra/collections/Collection', function() {
 		it('Should keep the same model', function() {
 			/*var FauxCollection = ring.create([Collection], {
 				constructor: function() {

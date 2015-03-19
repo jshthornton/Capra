@@ -1,11 +1,11 @@
 define([
 	'capra/Store',
-	'capra/collection/Collection',
-	'capra/model/Model',
-	'capra/model/RelatedMixin',
+	'capra/collections/Collection',
+	'capra/models/Model',
+	'capra/models/RelatedMixin',
 	'ring'
 ], function(Store, Collection, Model, RelatedMixin, ring) {
-	describe('capra/model/RelatedMixin', function() {
+	describe('capra/models/RelatedMixin', function() {
 		var FauxModel;
 
 		beforeAll(function() {

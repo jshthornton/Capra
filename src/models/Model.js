@@ -3,8 +3,8 @@ define([
 	'backbone',
 	'underscore',
 	'jquery',
-	'../sync/ajax',
-	'../sync/cache'
+	'../syncs/ajax',
+	'../syncs/cache'
 ], function(ring, Backbone, _, $, ajaxSync, cacheSync) {
 	'use strict';
 	return ring.create([Backbone.Model], {

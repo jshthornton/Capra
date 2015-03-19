@@ -1,7 +1,7 @@
 define([
-	'capra/cache/MemCache'
+	'capra/caches/MemCache'
 ], function(Cache) {
-	describe('capra/cache/MemCache', function() {
+	describe('capra/caches/MemCache', function() {
 		beforeEach(function() {
 			this.cache = new Cache();
 		});

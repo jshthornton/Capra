@@ -2,7 +2,7 @@ define([
 	'underscore',
 	'backbone',
 	'ring',
-	'./cache/MemCache'
+	'./caches/MemCache'
 ], function(_, Backbone, ring, MemCache) {
 	'use strict';
 
