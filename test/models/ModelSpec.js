@@ -171,8 +171,22 @@ define([
 				'contentType': 'application/json',
 				'responseText': '{}'
 			});
+		});
 
+		it('Should use custom url (even when a default url is not set)', function() {
+			var model = new Model();
+			expect(function() {
+				model.fetch({
+					url: 'foo',
+					useCache: false
+				});
+			}).not.toThrow();
 
+			expect(function() {
+				model.fetch({
+					useCache: false
+				});
+			}).toThrow();
 		});
 	});
 });

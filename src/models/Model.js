@@ -44,9 +44,10 @@ define([
 
 		sync: function(method, model, options) {
 			options = _.defaults(options, {
-				headers: _.defaults(_.result(this, 'defaultHeaders'), options.headers),
-				url: _.result(this, 'url')
+				headers: _.defaults(_.result(this, 'defaultHeaders'), options.headers)
 			});
+
+			options.url = options.url || _.result(this, 'url');
 
 			if(method === 'read') {
 				options = _.defaults(options, {
