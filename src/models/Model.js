@@ -27,7 +27,6 @@ define([
 				this.collection.store.requestCache.set(options.url, options.data, {
 					expiry: options.expiry
 				});
-
 				return true;
 			} catch(err) {
 				return false;
@@ -42,8 +41,29 @@ define([
 			return {};
 		},
 
+		save: function(key, val, options) {
+			var attrs;
+
+			// Handle both `"key", value` and `{key: value}` -style arguments.
+			if (key == null || typeof key === 'object') {
+				attrs = key;
+				options = val;
+			} else {
+				(attrs = {})[key] = val;
+			}
+
+			var rtn = this.$super(attrs, options);
+
+			if(rtn === false && _.isFunction(options.invalid)) {
+				options.invalid(this, this.validationError, options);
+			}
+
+			return rtn;
+		},
+
 		sync: function(method, model, options) {
 			options = _.defaults(options, {
+				wasNew: this.isNew(),
 				headers: _.defaults(_.result(this, 'defaultHeaders'), options.headers)
 			});
 
@@ -62,14 +82,8 @@ define([
 
 				if(options.useCache === true) {
 					var cache;
-
 					try {
 						cache = model.collection.store.requestCache;
-					} catch(err) {
-						throw new Error('Could not find request cache for model');
-					}
-
-					try {
 						return cacheSync.sync(cache, method, model, options);
 					} catch(err) {}
 				}
