@@ -60,26 +60,14 @@ define([
 			}, this);
 		},
 
-		getRelationship: function(model, key) {
-			var relationship = _.find(model.relationships, function(relationship) {
+		findRelationship: function(model, key) {
+			return _.find(model.relationships, function(relationship) {
 				return relationship.key === key;
 			});
-
-			if(relationship == null) {
-				throw new Error('Relationship not found on model');
-			}
-
-			return relationship;
 		},
 
-		getCollection: function(relationship) {
-			var collection = this.collections[relationship.collection];
-
-			if(collection == null) {
-				throw new Error('Collection ' + relationship.collection + ' not found');
-			}
-
-			return collection;
+		findCollection: function(relationship) {
+			return this.collections[relationship.collection];
 		},
 
 		getRelated: function(model, key) {
@@ -87,8 +75,8 @@ define([
 				attribute = model.get(key),
 				relationship;
 
-			relationship = this.getRelationship(model, key);
-			collection = this.getCollection(relationship);
+			relationship = this.findRelationship(model, key);
+			collection = this.findCollection(relationship);
 			
 			if(relationship.type === 'hasOne') {
 				if(model.has(key)) {
@@ -119,8 +107,14 @@ define([
 				attribute = model.get(key),
 				relationship;
 
-			relationship = this.getRelationship(model, key);
-			collection = this.getCollection(relationship);
+			relationship = this.findRelationship(model, key);
+			if(relationship == null) {
+				throw new Error('Could not find relationship ' + key);
+			}
+			collection = this.findCollection(relationship);
+			if(collection == null) {
+				throw new Error('Could not find collection ' + relationship);
+			}
 
 			var relatedModel = collection.add({});
 
