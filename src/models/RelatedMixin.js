@@ -2,17 +2,14 @@ define([
 	'ring',
 	'underscore',
 	'jquery',
-	'../when'
-], function(ring, _, $, when) {
+	'../when',
+	'../lang'
+], function(ring, _, $, when, lang) {
 	'use strict';
 	return ring.create({
 
 		getStore: function() {
-			try {
-				return this.collection.store;
-			} catch(err) {
-				throw new Error('Model does not belong to a collection or store');
-			}
+			return lang.getObject(this, 'collection.store');
 		},
 
 		fetchTree: function(options) {
@@ -20,38 +17,35 @@ define([
 
 			options = options || {};
 
-
 			if(_.has(options, 'contains') && _.isObject(options.contains)) {
 				// A branch and a leaf
 				return this.fetch(options).then(_.bind(function() {
 					var promises = [];
-					
-					_.forOwn(options.contains, function(relatedOptions, key) {
-						var relatedModel = store.getRelated(this, key);
 
-						if(relatedOptions === null) {
-							relatedOptions = undefined;
-						}
+					_.each(options.contains, function(item) {
+						item = lang.normalizeStringObject(item, 'key');
+
+						var relatedModel = store.getRelated(this, item.key);
 
 						if(relatedModel == null) {
-							relatedModel = store.spawn(this, key);
+							relatedModel = store.spawn(this, item.key);
 						}
 
 						if(relatedModel.isNew()) {
 							var collection,
 								relationship;
 
-							relationship = store.getRelationship(this, key);
-							collection = store.getCollection(relationship);
+							relationship = store.findRelationship(this, item.key);
+							collection = store.findCollection(relationship);
 
-							relatedOptions = _.merge(relatedOptions || {}, {
+							item.options = _.merge(item.options || {}, {
 								params: {}
 							});
 
-							relatedOptions.params[relationship.foreignKey] = relatedModel.get(relationship.foreignKey);
+							item.options.params[relationship.foreignKey] = relatedModel.get(relationship.foreignKey);
 						}
 
-						promises.push(relatedModel.fetchTree(relatedOptions));
+						promises.push(relatedModel.fetchTree(item.options));
 					}, this);
 
 					return when.apply(when, promises);

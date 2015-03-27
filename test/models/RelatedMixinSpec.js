@@ -113,9 +113,7 @@ define([
 				user.set('id', 1);
 
 				var promise = user.fetchTree({
-					contains: {
-						profile: null
-					}
+					contains: ['profile']
 				});
 
 				expect(jasmine.Ajax.requests.count()).toEqual(2);
@@ -147,9 +145,7 @@ define([
 				user.set('id', 1);
 
 				var promise = user.fetchTree({
-					contains: {
-						profile: null
-					}
+					contains: ['profile']
 				});
 
 				expect(jasmine.Ajax.requests.count()).toEqual(2);
@@ -180,9 +176,7 @@ define([
 				profile.set('id', 1);
 
 				var promise = profile.fetchTree({
-					contains: {
-						gender: null
-					}
+					contains: ['gender']
 				});
 
 				expect(jasmine.Ajax.requests.count()).toEqual(2);
@@ -218,9 +212,7 @@ define([
 
 			it('Should resolve after response (branch)', function() {
 				var promise = user.fetchTree({
-					contains: {
-						profile: null
-					}
+					contains: ['profile']
 				});
 
 				expect(jasmine.Ajax.requests.count()).toEqual(1);
@@ -268,13 +260,14 @@ define([
 				user.set('id', 1);
 
 				var promise = user.fetchTree({
-					contains: {
-						profile: {
-							contains: {
-								gender: null
+					contains: [
+						{
+							key: 'profile',
+							options: {
+								contains: ['gender']
 							}
 						}
-					}
+					]
 				});
 				
 				expect(jasmine.Ajax.requests.count()).toEqual(3);
@@ -318,18 +311,20 @@ define([
 				});
 
 				var promise = user.fetchTree({
-					contains: {
-						profile: {
-							contains: {
-								gender: null
+					contains: [
+						{
+							key: 'profile',
+							options: {
+								contains: ['gender']
 							}
 						},
-						special_profile: {
-							contains: {
-								gender: null
+						{
+							key: 'special_profile',
+							options: {
+								contains: ['gender']
 							}
 						}
-					}
+					]
 				});
 				
 				var special_profile = this.store.getRelated(user, 'special_profile');
