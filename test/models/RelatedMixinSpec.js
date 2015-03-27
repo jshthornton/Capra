@@ -192,6 +192,42 @@ define([
 				expect(this.store.getRelated(_gender, 'profiles').length).toEqual(1);
 			});
 
+			it('Should handle collection branch', function() {
+				jasmine.Ajax.stubRequest('/genders/1').andReturn({
+					'status': 200,
+					'contentType': 'application/json',
+					'responseText': '{ "id": 1 }'
+				});
+
+				var gender = genders.add({
+					id: 1
+				});
+
+				gender.fetchTree({
+					contains: ['profiles']
+				});
+
+				expect(jasmine.Ajax.requests.mostRecent().url).toEqual('/profiles?gender=1');
+			});
+
+			it('Should handle collection branch and wait', function() {
+				jasmine.Ajax.stubRequest('/genders/1').andReturn({
+					'status': 200,
+					'contentType': 'application/json',
+					'responseText': '{ "id": 1 }'
+				});
+
+				var gender = genders.add({
+					id: 1
+				});
+
+				var promise = gender.fetchTree({
+					contains: ['profiles']
+				});
+
+				expect(promise.state()).toEqual('pending');
+			});
+
 			it('Should resolve after response (leaf)', function() {
 				var promise = user.fetchTree();
 
@@ -400,6 +436,22 @@ define([
 
 				expect(user.get('profile')).toBeTruthy();
 				expect(user.get('profile')).toEqual(profiles.models[0].cid);
+			});
+
+			it('Should remove nested (but keep id)', function() {
+				var user = users.add({
+					foo: 'bar'
+				});
+
+				user.set({
+					profile: {
+						id: 1,
+						jim: 'bob'
+					}
+				});
+
+				expect(user.get('profile')).toBeTruthy();
+				expect(user.get('profile')).toEqual(1);
 			});
 		});
 	});

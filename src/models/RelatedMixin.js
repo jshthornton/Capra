@@ -25,27 +25,34 @@ define([
 					_.each(options.contains, function(item) {
 						item = lang.normalizeStringObject(item, 'key');
 
-						var relatedModel = store.getRelated(this, item.key);
+						var relationship = store.findRelationship(this, item.key);
 
-						if(relatedModel == null) {
-							relatedModel = store.spawn(this, item.key);
-						}
+						if(relationship.type === 'hasOne') {
+							var relatedModel = store.getRelated(this, item.key);
 
-						if(relatedModel.isNew()) {
-							var collection,
-								relationship;
+							if(relatedModel == null) {
+								relatedModel = store.spawn(this, item.key);
+							}
+							if(relatedModel.isNew()) {
+								item.options = _.merge(item.options || {}, {
+									params: {}
+								});
 
-							relationship = store.findRelationship(this, item.key);
-							collection = store.findCollection(relationship);
+								item.options.params[relationship.foreignKey] = relatedModel.get(relationship.foreignKey);
+							}
 
-							item.options = _.merge(item.options || {}, {
+							promises.push(relatedModel.fetchTree(item.options));
+
+						} else {
+							var collection = store.findCollection(relationship);
+
+							var nestedOptions = {
 								params: {}
-							});
-
-							item.options.params[relationship.foreignKey] = relatedModel.get(relationship.foreignKey);
+							};
+							nestedOptions.params[relationship.foreignKey] = this.id;
+							promises.push(collection.fetch(nestedOptions));
 						}
 
-						promises.push(relatedModel.fetchTree(item.options));
 					}, this);
 
 					return when.apply(when, promises);
@@ -80,7 +87,7 @@ define([
 					var relationship = store.findRelationship(this, key);
 					if(relationship != null) {
 						var collection = store.findCollection(relationship);
-						var relatedModel = collection.add(attr);
+						var relatedModel = collection.add(attr, options);
 						flatAttrs[key] = relatedModel.id || relatedModel.cid;
 						return;
 					}
