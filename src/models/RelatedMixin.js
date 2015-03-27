@@ -56,6 +56,42 @@ define([
 			}
 		},
 
+		set: function(key, val, options) {
+			var attrs;
+
+			if (key == null) {
+				return this;
+			}
+
+			// Handle both `"key", value` and `{key: value}` -style arguments.
+			if (key == null || typeof key === 'object') {
+				attrs = key;
+				options = val;
+			} else {
+				(attrs = {})[key] = val;
+			}
+
+			var store = this.getStore(),
+				flatAttrs = {};
+
+			_.forOwn(attrs, function(attr, key) {
+				if(_.isObject(attr)) {
+					// Must be a nested one...
+					var relationship = store.findRelationship(this, key);
+					if(relationship != null) {
+						var collection = store.findCollection(relationship);
+						var relatedModel = collection.add(attr);
+						flatAttrs[key] = relatedModel.id || relatedModel.cid;
+						return;
+					}
+				}
+
+				flatAttrs[key] = attr;
+			}, this);
+
+			return this.$super(flatAttrs, options);
+		},
+
 		getRelated: function(key) {
 			// Just a convenince wrapper
 			var store;

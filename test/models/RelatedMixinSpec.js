@@ -335,5 +335,72 @@ define([
 			});
 		});
 
+		describe('set (nested)', function() {
+			var users, profiles;
+
+			beforeEach(function() {
+				var User = ring.create([FauxModel], {
+					relationships: [
+						{
+							key: 'profile',
+							type: 'hasOne',
+							collection: 'profiles',
+							foreignKey: 'user'
+						}
+					]
+				});
+
+				var Profile = ring.create([FauxModel], {
+					relationships: [
+						{
+							key: 'user',
+							type: 'hasOne',
+							collection: 'users',
+							foreignKey: 'profile'
+						}
+					]
+				});
+
+				users = new Collection();
+				profiles = new Collection();
+
+				users.model = User;
+				profiles.model = Profile;
+
+				this.store.register('users', users);
+				this.store.register('profiles', profiles);
+			});
+
+			it('Should add nested related models to store', function() {
+				expect(profiles.length).toEqual(0);
+
+				var user = users.add({
+					foo: 'bar'
+				});
+
+				user.set({
+					profile: {
+						jim: 'bob'
+					}
+				});
+
+				expect(profiles.length).toEqual(1);
+			});
+
+			it('Should remove nested (but keep cid)', function() {
+				var user = users.add({
+					foo: 'bar'
+				});
+
+				user.set({
+					profile: {
+						jim: 'bob'
+					}
+				});
+
+				expect(user.get('profile')).toBeTruthy();
+				expect(user.get('profile')).toEqual(profiles.models[0].cid);
+			});
+		});
 	});
 });
