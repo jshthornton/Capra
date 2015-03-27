@@ -20,6 +20,17 @@ define([
 			});
 
 			return result;
+		},
+
+		normalizeStringObject: function(item, key) {
+			if(_.isObject(item)) {
+				return item;
+			}
+
+			var obj = {};
+			obj[key] = item;
+
+			return obj;
 		}
 	};
 });
