@@ -101,6 +101,13 @@ define([
 			}
 
 			return rtn;
+		},
+
+		reset: function(attributes, options) {
+			var defaults = _.result(this, 'defaults');
+
+			attributes = _.extend(defaults, attributes);
+			return this.set(attributes, options);
 		}
 	});
 });
