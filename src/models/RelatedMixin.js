@@ -8,8 +8,12 @@ define([
 	'use strict';
 	return ring.create({
 
-		getStore: function() {
-			return lang.getObject(this, 'collection.store');
+		getStore: function(strict) {
+			var store = lang.getObject(this, 'collection.store');
+			if(strict === true && store == null) {
+				throw new Error('Unable to get store');
+			}
+			return store;
 		},
 
 		fetchTree: function(options) {
@@ -84,12 +88,14 @@ define([
 			_.forOwn(attrs, function(attr, key) {
 				if(_.isObject(attr)) {
 					// Must be a nested one...
-					var relationship = store.findRelationship(this, key);
-					if(relationship != null) {
-						var collection = store.findCollection(relationship);
-						var relatedModel = collection.add(attr, options);
-						flatAttrs[key] = relatedModel.id || relatedModel.cid;
-						return;
+					if(store != null) {
+						var relationship = store.findRelationship(this, key);
+						if(relationship != null) {
+							var collection = store.findCollection(relationship);
+							var relatedModel = collection.add(attr, options);
+							flatAttrs[key] = relatedModel.id || relatedModel.cid;
+							return;
+						}
 					}
 				}
 
